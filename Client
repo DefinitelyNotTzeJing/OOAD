@@ -1,43 +1,110 @@
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+
 public class Client {
 
     private String username;
     private String password;
     private String email;
-    private char gender;
+    private String gender;
     private String contactNumber;
 
     //get username from textfile
-    public String getUsername()
+    LoginAndRegister lar = new LoginAndRegister();
+    File loginFile = new File("\\users" + lar.usernameInput + ".txt");
+
+    public String getUsername() throws FileNotFoundException
     {
         //read text file for username
+        Scanner reader = new Scanner(loginFile);
+        while(reader.hasNextLine()) 
+        {
+            String data = reader.nextLine();
+            String[] dataArray = data.split(",");
+            reader.close();
+            if (lar.usernameInput == dataArray[0])
+            {
+                username = dataArray[0];
+                break;
+            }
+        }
         return username;
     }
 
 
-    public String getPassword()
+    public String getPassword() throws FileNotFoundException
     {
         //read text file for password
+        Scanner reader = new Scanner(loginFile);
+        while(reader.hasNextLine()) 
+        {
+            String data = reader.nextLine();
+            String[] dataArray = data.split(",");
+            reader.close();
+            if (lar.usernameInput == dataArray[0])
+            {
+                password = dataArray[1];
+                break;
+            }
+        }
         return password;
     }
 
 
-    public String getEmail()
+    public String getEmail() throws FileNotFoundException
     {
         //read text file for email
+        Scanner reader = new Scanner(loginFile);
+        while(reader.hasNextLine()) 
+        {
+            String data = reader.nextLine();
+            String[] dataArray = data.split(",");
+            reader.close();
+            if (lar.usernameInput == dataArray[0])
+            {
+                email = dataArray[2];
+                break;
+            }
+        }
         return email;
     }
 
 
-    public char getGender()
+    public String getGender() throws FileNotFoundException
     {
         //read text file for gender
+        Scanner reader = new Scanner(loginFile);
+        while(reader.hasNextLine()) 
+        {
+            String data = reader.nextLine();
+            String[] dataArray = data.split(",");
+            reader.close();
+            if (lar.usernameInput == dataArray[0])
+            {
+                gender = dataArray[3];
+                break;
+            }
+        }
         return gender;
     }
 
 
-    public String getContactNumber()
+    public String getContactNumber() throws FileNotFoundException
     {
         //read text file for contact number
+        Scanner reader = new Scanner(loginFile);
+        while(reader.hasNextLine()) 
+        {
+            String data = reader.nextLine();
+            String[] dataArray = data.split(",");
+            reader.close();
+            if (lar.usernameInput == dataArray[0])
+            {
+                contactNumber = dataArray[4];
+                break;
+            }
+        }
         return contactNumber;
     }
 }
