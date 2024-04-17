@@ -1,6 +1,15 @@
+import java.util.Scanner;
+
 public class BookingManager 
 {
+    Scanner scanner = new Scanner(System.in);
+    
     //create booking method
+    public void bookingCreate()
+    {
+        System.out.println("Choose the driver: ");
+        
+    }
 
     //view booking method
         //update booking method
