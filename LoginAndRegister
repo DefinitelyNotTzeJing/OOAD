@@ -72,7 +72,7 @@ public class LoginAndRegister
         clientPasswordInput = loginInputScanner.nextLine();
 
         //read user textfile for existing username and password
-        String loginDirectory = ("C:\\Users\\TzeJing\\Desktop\\Object Oriented Application Development\\Practical\\Assignment\\users\\" + clientUsernameInput + ".txt");
+        String loginDirectory = (clientUsernameInput + ".txt");
         File loginFile = new File(loginDirectory);
         try
         {
@@ -141,7 +141,7 @@ public class LoginAndRegister
         
         try
         {
-            String registerDirectory = ("C:\\Users\\TzeJing\\Desktop\\Object Oriented Application Development\\Practical\\Assignment\\users\\" + clientUsername + ".txt");
+            String registerDirectory = (clientUsername + ".txt");
             FileWriter accCreate = new FileWriter(registerDirectory);
             accCreate.write(clientUsername + "," + clientPassword + "," + clientEmail + "," + clientContactNumber + "," + clientGender + "\n");
             accCreate.close();
