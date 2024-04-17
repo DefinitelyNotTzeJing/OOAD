@@ -28,7 +28,8 @@ public class LoginAndRegister
         passwordInput = loginInputScanner.nextLine();
 
         //read user textfile for existing username and password
-        File loginFile = new File(usernameInput + ".txt");
+        String loginDirectory = ("C:\\Users\\TzeJing\\Desktop\\Object Oriented Application Development\\Practical\\Assignment\\users\\" + usernameInput + ".txt");
+        File loginFile = new File(loginDirectory);
         try
         {
             Scanner reader = new Scanner(loginFile);
@@ -56,18 +57,21 @@ public class LoginAndRegister
             }
         }
         reader.close();
-        return false;
+        if (usernameInput == username && passwordInput == password)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     //register method
     public void clientRegister()
     {
         // Registration
-        String username;
-        String password;
-        String email;
-        String gender;
-        String contactNumber;
+        char aGender;
 
         System.out.print("Username: ");
         username = registerInputScanner.nextLine();
@@ -83,13 +87,18 @@ public class LoginAndRegister
 
         do{
             System.out.print("Gender (M/F) : ");
-            gender = registerInputScanner.nextLine();
-            gender = gender.toUpperCase();
-        }while (gender != "M" && gender != "F");
+            aGender = registerInputScanner.next().charAt(0);
+            aGender = Character.toUpperCase(aGender);
+        }while (aGender != 'M' && aGender != 'F');
+
+        gender = String.valueOf(aGender);
+        gender = gender.toUpperCase();
+        System.out.println(gender);
         
         try
         {
-            FileWriter accCreate = new FileWriter("User.txt");
+            String registerDirectory = ("C:\\Users\\TzeJing\\Desktop\\Object Oriented Application Development\\Practical\\Assignment\\users\\" + username + ".txt");
+            FileWriter accCreate = new FileWriter(registerDirectory);
             accCreate.write(username + "," + password + "," + email + "," + contactNumber + "," + gender + "\n");
             accCreate.close();
             System.out.println("Account has been created successfully.\nAccount created: " + username);
