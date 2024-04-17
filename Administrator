@@ -2,7 +2,6 @@ public class Administrator
 {
     private String adminName;
     private String adminPassword;
-    //view all clients' bookings waiting to be done
 
     public String getAdminName()
     {
