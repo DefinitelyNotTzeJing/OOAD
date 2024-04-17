@@ -12,7 +12,7 @@ public class Client {
 
     //get username from textfile
     LoginAndRegister lar = new LoginAndRegister();
-    File loginFile = new File("\\users" + lar.usernameInput + ".txt");
+    File loginFile = new File("\\users" + lar.clientUsernameInput + ".txt");
 
     public String getUsername() throws FileNotFoundException
     {
@@ -23,7 +23,7 @@ public class Client {
             String data = reader.nextLine();
             String[] dataArray = data.split(",");
             reader.close();
-            if (lar.usernameInput == dataArray[0])
+            if (lar.clientUsernameInput == dataArray[0])
             {
                 username = dataArray[0];
                 break;
@@ -42,7 +42,7 @@ public class Client {
             String data = reader.nextLine();
             String[] dataArray = data.split(",");
             reader.close();
-            if (lar.usernameInput == dataArray[0])
+            if (lar.clientUsernameInput == dataArray[0])
             {
                 password = dataArray[1];
                 break;
@@ -61,7 +61,7 @@ public class Client {
             String data = reader.nextLine();
             String[] dataArray = data.split(",");
             reader.close();
-            if (lar.usernameInput == dataArray[0])
+            if (lar.clientUsernameInput == dataArray[0])
             {
                 email = dataArray[2];
                 break;
@@ -80,7 +80,7 @@ public class Client {
             String data = reader.nextLine();
             String[] dataArray = data.split(",");
             reader.close();
-            if (lar.usernameInput == dataArray[0])
+            if (lar.clientUsernameInput == dataArray[0])
             {
                 gender = dataArray[3];
                 break;
@@ -99,7 +99,7 @@ public class Client {
             String data = reader.nextLine();
             String[] dataArray = data.split(",");
             reader.close();
-            if (lar.usernameInput == dataArray[0])
+            if (lar.clientUsernameInput == dataArray[0])
             {
                 contactNumber = dataArray[4];
                 break;
