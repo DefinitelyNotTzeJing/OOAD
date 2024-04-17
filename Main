@@ -1,6 +1,7 @@
 import java.util.Scanner;
 //import java.util.*;
-import java.time.format.DateTimeFormatter;  
+import java.time.format.DateTimeFormatter;
+import java.io.FileNotFoundException;
 import java.time.LocalDateTime;
 
 public class Main 
@@ -30,7 +31,7 @@ public class Main
 
 
 
-    private int systemUI()
+    private int systemUI() throws FileNotFoundException
     {
         Client c = new Client();
         
@@ -52,7 +53,7 @@ public class Main
         {
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
             LocalDateTime now = LocalDateTime.now();  
-            System.out.println("\n\nDear " + gender + " " + c.getUsername() + "\t\t\t\t\tCurrent Date and Time " + dtf.format(now)); //get username from login
+            System.out.println("\n\nDear " + gender + " " + username + "\t\t\t\t\tCurrent Date and Time " + dtf.format(now)); //get username from login
             System.out.println("Welcome to e-Hailing Booking System");
             System.out.println("_____________________________________________________________________________________________");
             System.out.println("Do you want to: ");
@@ -78,7 +79,7 @@ public class Main
         Main main = new Main();
         Administrator admin = new Administrator();
         BookingManager book = new BookingManager();
-        Client client = new Client();
+        //Client client = new Client();
         LoginAndRegister lar = new LoginAndRegister();
 
         int loginOption, systemOption;
@@ -127,10 +128,6 @@ public class Main
                 System.out.println("\n\nAn error has occured. Please try again (main method)\n");
                 e.printStackTrace();
             }
-        } while (loginOption != 1 && loginOption != 2);
-
-        
-       
-        
+        } while (loginOption != 1 && loginOption != 2); 
     }
 }
