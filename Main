@@ -17,15 +17,16 @@ public class Main
         {
             System.out.println("\n\nWelcome to the e-Hailing Booking System!");
             System.out.println("1. Register a new account");
-            System.out.println("2. Login");
+            System.out.println("2. Client login");
+            System.out.println("\n3. Administrator login");
             System.out.print("Choose an option: ");
             loginOption = inputLoginUI.nextInt();
 
-            if (loginOption != 1 && loginOption != 2)
+            if (loginOption != 1 && loginOption != 2 && loginOption != 3)
             {
                 System.out.println("Invalid operation (loginUI)");
             }
-        }while (loginOption != 1 && loginOption != 2);
+        }while (loginOption != 1 && loginOption != 2 && loginOption != 3);
         return loginOption;
     }
 
@@ -74,29 +75,45 @@ public class Main
 
 
 
+//    private void bookingUI()
+//    {
+//         System.out.println("");
+//    }
+
+
+
+    public int adminSystemUI()
+    {
+        System.out.println("Welcome to e-Hailing Booking System");
+        System.out.println("Dear Admin, What would you like to do?");
+        //shows all booking ID with indexes at the front, let the admin choose the booking with its index no
+    }
+
+
+
     public static void main(String[] args) 
     {   
         Main main = new Main();
         Administrator admin = new Administrator();
         BookingManager book = new BookingManager();
-        //Client client = new Client();
         LoginAndRegister lar = new LoginAndRegister();
 
-        int loginOption, systemOption;
-        boolean loginValidate;
+        int loginOption, systemOption, adminOption;
+        boolean loginValidateClient;
+        boolean loginValidateAdmin;
 
         do
         {
             loginOption = main.loginUI();
             try
             {
-                if (loginOption == 1)
+                if (loginOption == 1) //client register
                     lar.clientRegister();   
             
-                else if (loginOption == 2) 
+                else if (loginOption == 2) //client login
                 {
-                    loginValidate = lar.clientLogin();
-                    if (loginValidate == true)
+                    loginValidateClient = lar.clientLogin();
+                    if (loginValidateClient == true)
                     {
                         systemOption = main.systemUI();
                         if (systemOption == 1) //Create bookings
@@ -117,12 +134,26 @@ public class Main
                             System.out.println("Account logout successfully.");
                         }
                     }
-                    else if (loginValidate == false)
+                    else if (loginValidateClient == false)
                     {
                         System.out.println("Incorrect username and password. Please try again.");
                         main.loginUI();
                     }
                 }
+                else if (loginOption == 3) //admin login
+                {
+                    loginValidateAdmin = lar.adminLogin();
+                    if (loginValidateAdmin == true) //admin login succeed
+                    {
+                        adminOption = main.adminSystemUI();
+                    }
+                    else if (loginValidateAdmin == false) //admin login failed
+                    {
+                        System.out.println("Incorrect username and password. Please try again.");
+                        main.loginUI();
+                    }   
+                }
+                    
             } catch (Exception e)
             {
                 System.out.println("\n\nAn error has occured. Please try again (main method)\n");
