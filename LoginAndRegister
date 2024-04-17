@@ -9,26 +9,70 @@ public class LoginAndRegister
     
     Scanner loginInputScanner = new Scanner(System.in);
     Scanner registerInputScanner = new Scanner(System.in);
+    Scanner adminLoginInputScanner = new Scanner(System.in);
 
-    public String usernameInput;
-    public String passwordInput;
-    private String username;
-    private String password;
-    private String email;
-    private String contactNumber;
-    private String gender;
+    public String clientUsernameInput;
+    public String clientPasswordInput;
+    private String clientUsername;
+    private String clientPassword;
+    private String clientEmail;
+    private String clientContactNumber;
+    private String clientGender;
 
-    //login method
+    public String adminUsernameInput;
+    public String adminPasswordInput;
+    private String adminUsername;
+    private String adminPassword;
+
+    //admin login method
+    public boolean adminLogin() throws IOException
+    {
+        System.out.println("Admin login:");
+
+        System.out.print("Please enter your username: ");
+        adminUsernameInput = adminLoginInputScanner.nextLine();
+
+        System.out.print("Please enter your password: ");
+        adminPasswordInput = adminLoginInputScanner.nextLine();
+
+        //read admin textfile for validate username and password
+        File adminLoginFile = new File("Admin.txt");
+        Scanner readerAdmin = new Scanner(adminLoginFile);
+
+        while(readerAdmin.hasNextLine()) 
+        {
+            String data = readerAdmin.nextLine();
+            String[] dataArrayAdmin = data.split(",");
+            readerAdmin.close();
+            if (adminUsernameInput == dataArrayAdmin[0])
+            {
+                adminUsername = dataArrayAdmin[0];
+                adminPassword = dataArrayAdmin[1];
+                return true;
+            }
+        }
+        readerAdmin.close();
+        if (adminUsernameInput == adminUsername && adminPasswordInput == adminPassword)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    
+    //client login method
     public boolean clientLogin() throws FileNotFoundException
     {
         System.out.print("Please enter your username: ");
-        usernameInput = loginInputScanner.nextLine();
+        clientUsernameInput = loginInputScanner.nextLine();
 
         System.out.print("Please enter your password: ");
-        passwordInput = loginInputScanner.nextLine();
+        clientPasswordInput = loginInputScanner.nextLine();
 
         //read user textfile for existing username and password
-        String loginDirectory = ("C:\\Users\\TzeJing\\Desktop\\Object Oriented Application Development\\Practical\\Assignment\\users\\" + usernameInput + ".txt");
+        String loginDirectory = ("C:\\Users\\TzeJing\\Desktop\\Object Oriented Application Development\\Practical\\Assignment\\users\\" + clientUsernameInput + ".txt");
         File loginFile = new File(loginDirectory);
         try
         {
@@ -46,18 +90,18 @@ public class LoginAndRegister
             String data = reader.nextLine();
             String[] dataArray = data.split(",");
             reader.close();
-            if (usernameInput == dataArray[0])
+            if (clientUsernameInput == dataArray[0])
             {
-                username = dataArray[0];
-                password = dataArray[1];
-                email = dataArray[2];
-                contactNumber = dataArray[3];
-                gender = dataArray[4];
+                clientUsername = dataArray[0];
+                clientPassword = dataArray[1];
+                clientEmail = dataArray[2];
+                clientContactNumber = dataArray[3];
+                clientGender = dataArray[4];
                 return true;
             }
         }
         reader.close();
-        if (usernameInput == username && passwordInput == password)
+        if (clientUsernameInput == clientUsername && clientPasswordInput == clientPassword)
         {
             return true;
         }
@@ -74,16 +118,16 @@ public class LoginAndRegister
         char aGender;
 
         System.out.print("Username: ");
-        username = registerInputScanner.nextLine();
+        clientUsername = registerInputScanner.nextLine();
 
         System.out.print("Password: ");
-        password = registerInputScanner.nextLine();
+        clientPassword = registerInputScanner.nextLine();
 
         System.out.print("Email: ");
-        email = registerInputScanner.nextLine();
+        clientEmail = registerInputScanner.nextLine();
 
         System.out.print("Contact Number: ");
-        contactNumber = registerInputScanner.nextLine();
+        clientContactNumber = registerInputScanner.nextLine();
 
         do{
             System.out.print("Gender (M/F) : ");
@@ -91,17 +135,17 @@ public class LoginAndRegister
             aGender = Character.toUpperCase(aGender);
         }while (aGender != 'M' && aGender != 'F');
 
-        gender = String.valueOf(aGender);
-        gender = gender.toUpperCase();
-        System.out.println(gender);
+        clientGender = String.valueOf(aGender);
+        clientGender = clientGender.toUpperCase();
+        System.out.println(clientGender);
         
         try
         {
-            String registerDirectory = ("C:\\Users\\TzeJing\\Desktop\\Object Oriented Application Development\\Practical\\Assignment\\users\\" + username + ".txt");
+            String registerDirectory = ("C:\\Users\\TzeJing\\Desktop\\Object Oriented Application Development\\Practical\\Assignment\\users\\" + clientUsername + ".txt");
             FileWriter accCreate = new FileWriter(registerDirectory);
-            accCreate.write(username + "," + password + "," + email + "," + contactNumber + "," + gender + "\n");
+            accCreate.write(clientUsername + "," + clientPassword + "," + clientEmail + "," + clientContactNumber + "," + clientGender + "\n");
             accCreate.close();
-            System.out.println("Account has been created successfully.\nAccount created: " + username);
+            System.out.println("Account has been created successfully.\nAccount created: " + clientUsername);
         } catch (IOException e)
         {
             System.out.println("An error occured.");
