@@ -1,7 +1,7 @@
-public class Administrator 
+public class Administrator //admin doesnt need to register
 {
-    private String adminName;
-    private String adminPassword;
+    private String adminName = "admin";
+    private String adminPassword = "abcde";
 
     public String getAdminName()
     {
