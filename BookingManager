@@ -157,6 +157,7 @@ public class BookingManager
                 bookingIdCounter++;
             }
             bookingReader.close();
+            
             String bookingId = "B" + String.format("%04d", bookingIdCounter);
             writer.write(bookingId + "|" + name + "|" + date + "|" + time + "|" + paymentMethod + "|" + departureLocation + "|" + destination + "\n");
             writer.newLine();
