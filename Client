@@ -33,7 +33,7 @@ public class Client
             }
         } catch (IOException e)
         {
-            System.out.println("An error has occured.");
+            System.out.println("An error has occured. (client get username)");
         }
         return username;
     }
@@ -58,7 +58,7 @@ public class Client
             }   
         } catch (IOException e)
         {
-            System.out.println("An error has occured.");
+            System.out.println("An error has occured. (client get password)");
         }
         return password; 
     }
@@ -83,7 +83,7 @@ public class Client
             }
         } catch (IOException e)
         {
-            System.out.println("An error has occured.");
+            System.out.println("An error has occured. (client get email)");
         }
         return email;
     }
@@ -108,7 +108,7 @@ public class Client
             }
         } catch(IOException e)
         {
-            System.out.println("An error has occured.");
+            System.out.println("An error has occured. (client get gender)");
         }
         return gender;
     }
@@ -133,7 +133,7 @@ public class Client
             }
         }catch(IOException e)
         {
-            System.out.println("An error has occured.");
+            System.out.println("An error has occured. (client get contact number)");
         }
         return contactNumber;
     }
