@@ -25,9 +25,10 @@ public class Client
                 String data = reader.nextLine();
                 String[] dataArray = data.split(",");
                 reader.close();
-                if (lar.clientUsernameInput == dataArray[0])
+                if (lar.clientUsernameInput.equals(dataArray[0]))
                 {
                     username = dataArray[0];
+                    System.out.println("Temporary client get username test: " + username);
                     break;
                 }
             }
@@ -50,9 +51,10 @@ public class Client
                 String data = reader.nextLine();
                 String[] dataArray = data.split(",");
                 reader.close();
-                if (lar.clientUsernameInput == dataArray[0])
+                if (lar.clientUsernameInput.equals(dataArray[0]))
                 {
                     password = dataArray[1];
+                    System.out.println("Temporary client get password test: " + password);
                     break;
                 }
             }   
@@ -75,9 +77,10 @@ public class Client
                 String data = reader.nextLine();
                 String[] dataArray = data.split(",");
                 reader.close();
-                if (lar.clientUsernameInput == dataArray[0])
+                if (lar.clientUsernameInput.equals(dataArray[0]))
                 {
                     email = dataArray[2];
+                    System.out.println("Temporary client get email test: " + email);
                     break;
                 }
             }
@@ -100,9 +103,10 @@ public class Client
                 String data = reader.nextLine();
                 String[] dataArray = data.split(",");
                 reader.close();
-                if (lar.clientUsernameInput == dataArray[0])
+                if (lar.clientUsernameInput.equals(dataArray[0]))
                 {
                     gender = dataArray[3];
+                    System.out.println("Temporary client get gender test: " + gender);
                     break;
                 }
             }
@@ -125,9 +129,10 @@ public class Client
                 String data = reader.nextLine();
                 String[] dataArray = data.split(",");
                 reader.close();
-                if (lar.clientUsernameInput == dataArray[0])
+                if (lar.clientUsernameInput.equals(dataArray[0]))
                 {
                     contactNumber = dataArray[4];
+                    System.out.println("Temporary client get contact number test: " + contactNumber);
                     break;
                 }
             }
