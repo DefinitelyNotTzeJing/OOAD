@@ -6,7 +6,6 @@ import java.io.IOException;
 
 public class LoginAndRegister 
 {
-    
     Scanner loginInputScanner = new Scanner(System.in);
     Scanner registerInputScanner = new Scanner(System.in);
     Scanner adminLoginInputScanner = new Scanner(System.in);
@@ -24,8 +23,10 @@ public class LoginAndRegister
     private String adminUsername;
     private String adminPassword;
 
+    Administrator admin = new Administrator();
+
     //admin login method
-    public boolean adminLogin() throws IOException
+    public boolean adminLogin()
     {
         System.out.println("Admin login:");
 
@@ -35,23 +36,9 @@ public class LoginAndRegister
         System.out.print("Please enter your password: ");
         adminPasswordInput = adminLoginInputScanner.nextLine();
 
-        //read admin textfile for validate username and password
-        File adminLoginFile = new File("Admin.txt");
-        Scanner readerAdmin = new Scanner(adminLoginFile);
+        adminUsername = admin.getAdminName();
+        adminPassword = admin.getAdminPassword();
 
-        while(readerAdmin.hasNextLine()) 
-        {
-            String data = readerAdmin.nextLine();
-            String[] dataArrayAdmin = data.split(",");
-            readerAdmin.close();
-            if (adminUsernameInput == dataArrayAdmin[0])
-            {
-                adminUsername = dataArrayAdmin[0];
-                adminPassword = dataArrayAdmin[1];
-                return true;
-            }
-        }
-        readerAdmin.close();
         if (adminUsernameInput == adminUsername && adminPasswordInput == adminPassword)
         {
             return true;
