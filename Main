@@ -1,6 +1,5 @@
 import java.util.Scanner;
 import java.time.format.DateTimeFormatter;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.io.File;
@@ -39,44 +38,38 @@ public class Main
         
         int systemOption = 0; //initialize systemOption with a value
 
-        try
+        String aGender = c.getGender();
+        String username = c.getUsername(); 
+        String gender;
+        
+        if (aGender == "M")
         {
-            String aGender = c.getGender();
-            String username = c.getUsername(); 
-            String gender;
-            
-            if (aGender == "M")
-            {
-                gender = ("Mr.");
-            }
-            else
-            {
-                gender = ("Mrs.");
-            }
-            
-            do 
-            {
-                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
-                LocalDateTime now = LocalDateTime.now();  
-                System.out.println("\n\nDear " + gender + " " + username + "\t\t\t\t\tCurrent Date and Time " + dtf.format(now)); //get username from login
-                System.out.println("Welcome to e-Hailing Booking System");
-                System.out.println("_____________________________________________________________________________________________");
-                System.out.println("Do you want to: ");
-                System.out.println("<1> Create/Request Booking(s)");
-                System.out.println("<2> View Booking(s)");
-                System.out.println("<3> Quit");
-                systemOption = inputSystemUI.nextInt();
-                inputSystemUI.nextLine();
-
-                if (systemOption != 1 && systemOption != 2 && systemOption != 3)
-                {
-                    System.out.println("Invalid operation(Line 56)");
-                }
-            } while (systemOption != 1 && systemOption != 2 && systemOption != 3);
-        } catch(IOException e)
-        {
-            System.out.println("An error has occured");
+            gender = ("Mr.");
         }
+        else
+        {
+            gender = ("Mrs.");
+        }
+        
+        do 
+        {
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+            LocalDateTime now = LocalDateTime.now();  
+            System.out.println("\n\nDear " + gender + " " + username + "\t\t\t\t\tCurrent Date and Time " + dtf.format(now)); //get username from login
+            System.out.println("Welcome to e-Hailing Booking System");
+            System.out.println("_____________________________________________________________________________________________");
+            System.out.println("Do you want to: ");
+            System.out.println("<1> Create/Request Booking(s)");
+            System.out.println("<2> View Booking(s)");
+            System.out.println("<3> Quit");
+            systemOption = inputSystemUI.nextInt();
+            inputSystemUI.nextLine();
+
+            if (systemOption != 1 && systemOption != 2 && systemOption != 3)
+            {
+                System.out.println("Invalid operation(Line 56)");
+            }
+        } while (systemOption != 1 && systemOption != 2 && systemOption != 3);
 
         return systemOption;
     }
@@ -187,14 +180,14 @@ public class Main
     public static void main(String[] args) 
     {   
         Main main = new Main();
-        Administrator admin = new Administrator();
+        // Administrator admin = new Administrator();
         BookingManager book = new BookingManager();
         LoginAndRegister lar = new LoginAndRegister();
 
         int loginOption, systemOption;
         String adminOption;
-        boolean loginValidateClient;
-        boolean loginValidateAdmin;
+        int loginValidateClient; //1 = true, 2 = false
+        int loginValidateAdmin;
 
         String bookingIDInput;
 
@@ -204,25 +197,27 @@ public class Main
             try
             {
                 if (loginOption == 1) //client register
-                    lar.clientRegister();   
-            
+                {
+                    lar.clientRegister(); 
+                }
+
                 else if (loginOption == 2) //client login
                 {
                     loginValidateClient = lar.clientLogin();
-                    if (loginValidateClient == true)
+                    if (loginValidateClient == 1)
                     {
                         systemOption = main.systemUI();
                         if (systemOption == 1) //Create bookings
                         {
                             //create bookings and save the details in respective user text file (make a method in client class and save the booking details in text file)
-                            System.out.println("Create bookings waiting to be done");
+                            // System.out.println("Create bookings waiting to be done");
                             book.bookingCreate();
                         }
 
                         else if (systemOption  == 2) //View bookings
                         {
                             //view all bookings and a new interface for the user to update, cancel and search for certain booking 
-                            System.out.println("View bookings waiting to be done");
+                            // System.out.println("View bookings waiting to be done");
                             bookingIDInput = main.bookingUI();
                             book.bookingView(bookingIDInput);
                         }
@@ -233,20 +228,21 @@ public class Main
                             System.out.println("Account logout successfully.");
                         }
                     }
-                    else if (loginValidateClient == false)
+                    else
                     {
                         System.out.println("Incorrect username and password. Please try again.");
-                        main.loginUI();
                     }
                 }
+
                 else if (loginOption == 3) //admin login
                 {
                     loginValidateAdmin = lar.adminLogin();
-                    if (loginValidateAdmin == true) //admin login succeed
+                    if (loginValidateAdmin == 1) //admin login succeed
                     {
                         adminOption = main.adminSystemUI();
+                        book.bookingView(adminOption); //link to a method to show booking details
                     }
-                    else if (loginValidateAdmin == false) //admin login failed
+                    else if (loginValidateAdmin == 2) //admin login failed
                     {
                         System.out.println("Incorrect username and password. Please try again.");
                         main.loginUI();
@@ -255,7 +251,7 @@ public class Main
                     
             } catch (Exception e)
             {
-                System.out.println("\n\nAn error has occured. Please try again (main method)\n");
+                System.out.println("\n\nAn error has occured. Please try again\n");
                 e.printStackTrace();
             }
         } while (loginOption != 1 && loginOption != 2); 
