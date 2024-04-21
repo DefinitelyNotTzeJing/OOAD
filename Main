@@ -2,7 +2,9 @@ import java.util.Scanner;
 //import java.util.*;
 import java.time.format.DateTimeFormatter;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.time.LocalDateTime;
+import java.io.File;
 
 public class Main 
 {
@@ -18,8 +20,8 @@ public class Main
             System.out.println("\n\nWelcome to the e-Hailing Booking System!");
             System.out.println("1. Register a new account");
             System.out.println("2. Client login");
-            System.out.println("\n3. Administrator login");
-            System.out.print("Choose an option: ");
+            System.out.println("3. Administrator login");
+            System.out.print("\nChoose an option: ");
             loginOption = inputLoginUI.nextInt();
 
             if (loginOption != 1 && loginOption != 2 && loginOption != 3)
@@ -75,18 +77,109 @@ public class Main
 
 
 
-//    private void bookingUI()
-//    {
-//         System.out.println("");
-//    }
-
-
-
-    public int adminSystemUI()
+    private void bookingUI()
     {
+        String bookingID;
+        String username;
+        String date;
+        String time;
+        String paymentMethod;
+        String departureLocation;
+        String destination;
+
+        String bookingIDInput;
+
+        Scanner bookingIDInputScanner = new Scanner(System.in);
+
+        System.out.println("Booking ID\tUsername\tDate\tTime\tPayment Method");
+        System.out.println("_______________________________________________________________________");
+        try
+        {
+            String bookingDirectory = "booking.txt";
+            File loginFile = new File(bookingDirectory);
+            Scanner bookingDataReader = new Scanner(loginFile);
+
+            while (bookingDataReader.hasNextLine())
+            {
+                String bookingData = bookingDataReader.nextLine();
+                String[] dataArray = bookingData.split(",");
+                bookingDataReader.close();
+
+                bookingID = dataArray[0];
+                username = dataArray[1];
+                date = dataArray[2];
+                time = dataArray[3];
+                paymentMethod = dataArray[4];
+                departureLocation = dataArray[5];
+                destination = dataArray[6];
+
+                System.out.println(bookingID + "\t" + username + "\t" + date + "\t" + time + "\t" + paymentMethod);
+            }
+            System.out.println("Please enter the respective Booking ID: ");
+            bookingIDInput = bookingIDInputScanner.nextLine();
+            
+        } catch (IOException e)
+        {
+            System.out.println("An error occured during the booking file opening.");
+        }
+        
+        
+
+        
+    }
+
+
+
+    public String adminSystemUI()
+    {
+        String bookingID = "0";
+        String bookingName;
+        String bookingDate;
+        String bookingTime;
+        String bookingPaymentMethod;
+
+        Scanner adminInput = new Scanner(System.in);
+        
         System.out.println("Welcome to e-Hailing Booking System");
-        System.out.println("Dear Admin, What would you like to do?");
+        System.out.print("Dear Admin, which booking would you like to choose?\n");
+        System.out.print("___________________________________________________________________________________");
         //shows all booking ID with indexes at the front, let the admin choose the booking with its index no
+    
+        System.out.println("Index No.\tBooking ID\tName\t\t\tDate\t\tTime\tPayment Method");
+        int numBooking = 0; // check how many lines are there in the booking text file
+        File bookingFile = new File("booking.txt");
+        try
+        {
+            Scanner readerBooking = new Scanner(bookingFile);
+            while (readerBooking.hasNextLine())
+            {
+                numBooking++;
+            }
+            readerBooking.close();
+
+            for (int i = 1; i < numBooking; i++)
+            {
+                String data = readerBooking.nextLine();
+                String[] dataArrayBooking = data.split(",");
+                
+                bookingID = dataArrayBooking[0];
+                bookingName = dataArrayBooking[1];
+                bookingDate = dataArrayBooking[2];
+                bookingTime = dataArrayBooking[3];
+                bookingPaymentMethod = dataArrayBooking[4];
+
+                System.out.println(i + ".\t\t" + bookingID + "\t" + bookingName + "\t" + bookingDate + "\t" + bookingTime + "\t" + bookingPaymentMethod);
+                // readerBooking.close();
+            }
+            System.out.print("\n\nPlease input the Booking ID to choose the desired booking: ");
+            bookingID = adminInput.nextLine();
+            adminInput.close();
+        } catch(IOException e)
+        {
+            System.out.println("An error has occured");
+            e.getMessage();
+        }
+        return bookingID;
     }
 
 
@@ -98,7 +191,8 @@ public class Main
         BookingManager book = new BookingManager();
         LoginAndRegister lar = new LoginAndRegister();
 
-        int loginOption, systemOption, adminOption;
+        int loginOption, systemOption;
+        String adminOption;
         boolean loginValidateClient;
         boolean loginValidateAdmin;
 
@@ -120,6 +214,7 @@ public class Main
                         {
                             //create bookings and save the details in respective user text file (make a method in client class and save the booking details in text file)
                             System.out.println("Create bookings waiting to be done");
+                            book.bookingCreate();
                         }
 
                         else if (systemOption  == 2) //View bookings
