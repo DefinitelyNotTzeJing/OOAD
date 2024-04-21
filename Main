@@ -134,8 +134,8 @@ public class Main
         Scanner adminInput = new Scanner(System.in);
         
         System.out.println("Welcome to e-Hailing Booking System");
-        System.out.print("Dear Admin, which booking would you like to choose?\n");
-        System.out.print("___________________________________________________________________________________");
+        System.out.println("Dear Admin, which booking would you like to choose?");
+        System.out.println("____________________________________________________________________________________________________________");
         //shows all booking ID with indexes at the front, let the admin choose the booking with its index no
     
         System.out.println("Index No.\tBooking ID\tName\t\t\tDate\t\tTime\tPayment Method");
