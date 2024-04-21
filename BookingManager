@@ -1,17 +1,237 @@
 import java.util.Scanner;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.io.BufferedReader;
+import java.io.FileReader;
+
 
 public class BookingManager 
 {
     Scanner scanner = new Scanner(System.in);
+    private static int bookingIdCounter = 1;
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+    private static final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("HH:mm");
     
     //create booking method
-    public void bookingCreate()
+    public static void bookingCreate()
     {
-        System.out.println("Choose the driver: ");
+        Scanner bookingCreateInput = new Scanner(System.in);    
+        System.out.println("\nEnter booking details");
+    
+        // Increment and format booking ID
+        String bookingId = "B" + String.format("%04d", bookingIdCounter++);
+    
+        String name = "";
+        boolean validName = false;
+        while (!validName)
+        {
+            System.out.print("Enter your name: ");
+            name = bookingCreateInput.nextLine();
+            if (!name.matches("[0-9]+"))
+            {
+                validName = true;
+            } else 
+            {
+                System.out.println("Wrong format. Name cannot contain numerical characters. Please re-enter.");
+            }
+        }
+    
+        String date = "";
+        boolean validDate = false;
+        while (!validDate) 
+        {
+            System.out.print("Enter date (yyyy-MM-dd): ");
+            date = bookingCreateInput.nextLine();
+            try 
+            {
+                DATE_FORMAT.parse(date);
+                validDate = true;
+            } catch (ParseException e) 
+            {
+                System.out.println("Wrong format. Please enter date in format yyyy-MM-dd");
+            }
+        }
+    
+        String time = "";
+        boolean validTime = false;
+        while (!validTime) 
+        {
+            System.out.print("Enter time (HH:mm): ");
+            time = bookingCreateInput.nextLine();
+            try 
+            {
+                TIME_FORMAT.parse(time);
+                validTime = true;
+            } catch (ParseException e) 
+            {
+                System.out.println("Wrong format. Please enter time in format HH:mm");
+            }
+        }
+    
+        int paymentChoice = 0;
+        boolean validPaymentChoice = false;
+        while (!validPaymentChoice) 
+        {
+            System.out.println("Choose payment method:");
+            System.out.println("1. QR Payment");
+            System.out.println("2. Online Banking");
+            String paymentInput = bookingCreateInput.nextLine();
+            if (paymentInput.equals("1") || paymentInput.equals("2")) 
+            {
+                paymentChoice = Integer.parseInt(paymentInput);
+                validPaymentChoice = true;
+            } else 
+            {
+                System.out.println("Wrong format. Please enter 1 or 2 for payment method.");
+            }
+        }
+        String paymentMethod = (paymentChoice == 1) ? "QR Payment" : "Online Banking";
+    
+        String departureLocation = "";
+        boolean validDepartureLocation = false;
+        while (!validDepartureLocation) 
+        {
+            System.out.print("Enter departure location: ");
+            departureLocation = bookingCreateInput.nextLine();
+            if (!departureLocation.matches("[0-9]+")) 
+            {
+                validDepartureLocation = true;
+            } else 
+            {
+                System.out.println("Wrong format. Departure location cannot contain numerical characters. Please re-enter.");
+            }
+        }
+    
+        String destination = "";
+        boolean validDestination = false;
+        while (!validDestination) 
+        {
+            System.out.print("Enter destination: ");
+            destination = bookingCreateInput.nextLine();
+            if (!destination.matches("[0-9]+")) 
+            {
+                validDestination = true;
+            } else 
+            {
+                System.out.println("Wrong format. Destination cannot contain numerical characters. Please re-enter.");
+            }
+        }
         
+        // Write booking details to file
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("booking.txt", true))) 
+        {
+            writer.write(bookingId + "," + name + "," + date + "," + time + "," + paymentMethod + "," + departureLocation + "," + destination);
+            writer.newLine();
+            System.out.println("Booking successful. Your booking ID is: " + bookingId);
+        } catch (IOException e) 
+        {
+            System.out.println("Error writing to file: " + e.getMessage());
+        }
     }
 
+
     //view booking method
+    public void bookingView(String bookingID) 
+    {
+        try (BufferedReader reader = new BufferedReader(new FileReader("booking.txt"))) 
+        {
+            Scanner scanner = new Scanner(System.in);
+
+            while (true) {
+                System.out.println("Enter search term (Driver, Departure, Destination, Rating, Booking), or 'end' to exit:");
+                String searchTerm = scanner.nextLine().trim();
+
+                if (searchTerm.equalsIgnoreCase("end")) {
+                    System.out.println("Exiting search...");
+                    break; // Exit the loop if user enters 'end'
+                }
+
+                switch (searchTerm.toLowerCase()) {
+                    case "driver":
+                        searchAndDisplayDetails(reader, "Driver:");
+                        break;
+                    case "departure":
+                        searchAndDisplayDetails(reader, "Departure:");
+                        break;
+                    case "destination":
+                        searchAndDisplayDetails(reader, "Destination:");
+                        break;
+                    case "rating":
+                        System.out.println("Re-rating search results:");
+                        searchAndReRateDetails(reader, "Rating:");
+                        break;
+                    case "booking":
+                        searchAndDisplayDetails(reader, "Booking:");
+                        break;
+                    default:
+                        System.out.println("Invalid search term. Please try again.");
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("Error reading file: " + e.getMessage());
+        }
+    }
+
+    private static void searchAndDisplayDetails(BufferedReader reader, String sectionHeader) throws IOException {
+        String line;
+        boolean foundSection = false;
+
+        System.out.println("\nSearching for " + sectionHeader.trim());
+
+        while ((line = reader.readLine()) != null) {
+            if (line.startsWith(sectionHeader)) {
+                foundSection = true;
+            } else if (foundSection && line.trim().isEmpty()) {
+            
+                break;
+            } else if (foundSection) {
+                
+                System.out.println(line.trim());
+            }
+        }
+
+        if (!foundSection) {
+            System.out.println("No details found for " + sectionHeader.trim());
+        }
+    }
+
+    private static void searchAndReRateDetails(BufferedReader reader, String sectionHeader) throws IOException {
+        String line;
+        boolean foundSection = false;
+        Scanner scanner = new Scanner(System.in);
+
+        while ((line = reader.readLine()) != null) {
+            if (line.startsWith(sectionHeader)) {
+                foundSection = true;
+            } else if (foundSection && line.trim().isEmpty()) {
+            
+                break;
+            } else if (foundSection) {
+              
+                System.out.println(line.trim());
+
+
+                System.out.print("Enter new rating (1-5) or '0' to skip: ");
+                int newRating = scanner.nextInt();
+
+                if (newRating >= 1 && newRating <= 5) {
+                    System.out.println("Rating updated successfully to: " + newRating);
+                  
+                } else if (newRating == 0) {
+                    System.out.println("Skipping re-rating.");
+                } else {
+                    System.out.println("Invalid rating. Please re-enter number between 1 and 5.");
+                }
+            }
+        }
+
+        if (!foundSection) {
+            System.out.println("No details found for " + sectionHeader.trim());
+        }
+    }
+}
         //update booking method
         //delete booking method
-}
