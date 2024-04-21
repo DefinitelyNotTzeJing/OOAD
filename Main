@@ -32,30 +32,15 @@ public class Main
 
 
 
-    private int systemUI()
+    private int systemUI(String username)
     {
-        Client c = new Client();
-        
         int systemOption = 0; //initialize systemOption with a value
-
-        String aGender = c.getGender();
-        String username = c.getUsername(); 
-        String gender;
-        
-        if (aGender == "M")
-        {
-            gender = ("Mr.");
-        }
-        else
-        {
-            gender = ("Mrs.");
-        }
         
         do 
         {
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
             LocalDateTime now = LocalDateTime.now();  
-            System.out.println("\n\nDear " + gender + " " + username + "\t\t\t\t\tCurrent Date and Time " + dtf.format(now)); //get username from login
+            System.out.println("\n\nDear user\t\t\t\t\tCurrent Date and Time " + dtf.format(now)); //get username from login
             System.out.println("Welcome to e-Hailing Booking System");
             System.out.println("_____________________________________________________________________________________________");
             System.out.println("Do you want to: ");
@@ -67,7 +52,7 @@ public class Main
 
             if (systemOption != 1 && systemOption != 2 && systemOption != 3)
             {
-                System.out.println("Invalid operation(Line 56)");
+                System.out.println("Invalid operation(system UI)");
             }
         } while (systemOption != 1 && systemOption != 2 && systemOption != 3);
 
@@ -76,49 +61,62 @@ public class Main
 
 
 
-    private String bookingUI()
+    private String bookingUI() //Done!! No touchy
     {
-        String bookingID;
+        String bookingID = "0";
         String username;
         String date;
         String time;
         String paymentMethod;
+    
+        // Ask for the current user's username to filter data
+        int numBooking = 0; // check how many lines are there in the booking text file
+        File bookingFile = new File("booking.txt");
+        Scanner readerBooking = null;
+        Scanner adminInput = new Scanner(System.in);
 
-        String bookingIDInput = "0"; //initialize the variable with a temporary value
-
-        Scanner bookingIDInputScanner = new Scanner(System.in);
-
-        System.out.println("Booking ID\tUsername\tDate\tTime\tPayment Method");
-        System.out.println("_______________________________________________________________________");
-        try
+        try 
         {
-            String bookingDirectory = "booking.txt";
-            File loginFile = new File(bookingDirectory);
-            Scanner bookingDataReader = new Scanner(loginFile);
-            bookingIDInputScanner.close();
-
-            while (bookingDataReader.hasNextLine())
+            readerBooking = new Scanner(bookingFile);
+            while (readerBooking.hasNextLine()) 
             {
-                String bookingData = bookingDataReader.nextLine();
-                String[] dataArray = bookingData.split(",");
-                bookingDataReader.close();
-
-                bookingID = dataArray[0];
-                username = dataArray[1];
-                date = dataArray[2];
-                time = dataArray[3];
-                paymentMethod = dataArray[4];
-
-                System.out.println(bookingID + "\t" + username + "\t" + date + "\t" + time + "\t" + paymentMethod);
+                numBooking++;
+                readerBooking.nextLine(); // Read the line to advance the scanner
             }
-            System.out.println("Please enter the respective Booking ID: ");
-            bookingIDInput = bookingIDInputScanner.nextLine();
-            
-        } catch (IOException e)
+
+            readerBooking.close(); // Close the reader first
+
+            readerBooking = new Scanner(bookingFile); // Reopen the file for reading
+            for (int i = 1; i <= numBooking; i++) 
+            {
+                String data = readerBooking.nextLine();
+                String[] dataArrayBooking = data.split("\\|");
+
+                bookingID = dataArrayBooking[0];
+                username = dataArrayBooking[1];
+                date = dataArrayBooking[2];
+                time = dataArrayBooking[3];
+                paymentMethod = dataArrayBooking[4];
+
+                System.out.println(i + ".\t\t" + bookingID + "\t" + username + "\t" + date + "\t" + time + "\t" + paymentMethod);
+            }
+
+            System.out.print("\n\nPlease input the Booking ID to choose the desired booking: ");
+            bookingID = adminInput.nextLine();
+        } catch (IOException e) 
         {
-            System.out.println("An error occured during the booking file opening.");
+            System.out.println("An error has occurred (admin system UI)");
+            e.printStackTrace();
+        } finally 
+        {
+            if (readerBooking != null) 
+            {
+                readerBooking.close();
+            }
+            adminInput.close(); // Close adminInput scanner
         }
-        return bookingIDInput;
+
+        return bookingID;
     }
 
 
@@ -129,7 +127,6 @@ public class Main
         String bookingName;
         String bookingDate;
         String bookingTime;
-        String bookingPaymentMethod;
 
         Scanner adminInput = new Scanner(System.in);
         
@@ -144,26 +141,28 @@ public class Main
         try
         {
             Scanner readerBooking = new Scanner(bookingFile);
-            while (readerBooking.hasNextLine())
-            {
+            while (readerBooking.hasNextLine()) {
                 numBooking++;
+                readerBooking.nextLine(); // Move scanner to the next line
             }
             readerBooking.close();
 
-            for (int i = 1; i < numBooking; i++)
-            {
+            // Reopen the scanner to read from the beginning of the file
+            readerBooking = new Scanner(bookingFile);
+
+            for (int i = 1; i <= numBooking; i++) 
+            { // Start from 1 and use <= to include all lines
                 String data = readerBooking.nextLine();
-                String[] dataArrayBooking = data.split(",");
-                
+                String[] dataArrayBooking = data.split("\\|");
+        
                 bookingID = dataArrayBooking[0];
                 bookingName = dataArrayBooking[1];
                 bookingDate = dataArrayBooking[2];
                 bookingTime = dataArrayBooking[3];
-                bookingPaymentMethod = dataArrayBooking[4];
-
-                System.out.println(i + ".\t\t" + bookingID + "\t" + bookingName + "\t" + bookingDate + "\t" + bookingTime + "\t" + bookingPaymentMethod);
-                // readerBooking.close();
+        
+                System.out.println(i + ".\t\t" + bookingID + "\t" + bookingName + "\t" + bookingDate + "\t" + bookingTime);
             }
+            readerBooking.close();
             System.out.print("\n\nPlease input the Booking ID to choose the desired booking: ");
             bookingID = adminInput.nextLine();
             adminInput.close();
@@ -180,9 +179,9 @@ public class Main
     public static void main(String[] args) 
     {   
         Main main = new Main();
-        // Administrator admin = new Administrator();
         BookingManager book = new BookingManager();
         LoginAndRegister lar = new LoginAndRegister();
+        Client c = new Client();
 
         int loginOption, systemOption;
         String adminOption;
@@ -190,6 +189,8 @@ public class Main
         int loginValidateAdmin;
 
         String bookingIDInput;
+
+        String username = c.getUsername();
 
         do
         {
@@ -206,18 +207,16 @@ public class Main
                     loginValidateClient = lar.clientLogin();
                     if (loginValidateClient == 1)
                     {
-                        systemOption = main.systemUI();
+                        systemOption = main.systemUI(username);
                         if (systemOption == 1) //Create bookings
                         {
                             //create bookings and save the details in respective user text file (make a method in client class and save the booking details in text file)
-                            // System.out.println("Create bookings waiting to be done");
                             book.bookingCreate();
                         }
 
                         else if (systemOption  == 2) //View bookings
                         {
                             //view all bookings and a new interface for the user to update, cancel and search for certain booking 
-                            // System.out.println("View bookings waiting to be done");
                             bookingIDInput = main.bookingUI();
                             book.bookingView(bookingIDInput);
                         }
