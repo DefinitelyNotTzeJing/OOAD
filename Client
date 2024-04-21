@@ -1,109 +1,139 @@
 import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Scanner;
 
-public class Client {
-
-    private String username;
-    private String password;
-    private String email;
-    private String gender;
-    private String contactNumber;
+public class Client 
+{
+    private String username = "";
+    private String password = "";
+    private String email = "";
+    private String gender = "";
+    private String contactNumber = "";
 
     //get username from textfile
     LoginAndRegister lar = new LoginAndRegister();
     File loginFile = new File(".\\users" + lar.clientUsernameInput + ".txt");
 
-    public String getUsername() throws FileNotFoundException
+    public String getUsername()
     {
         //read text file for username
-        Scanner reader = new Scanner(loginFile);
-        while(reader.hasNextLine()) 
+        try
         {
-            String data = reader.nextLine();
-            String[] dataArray = data.split(",");
-            reader.close();
-            if (lar.clientUsernameInput == dataArray[0])
+            Scanner reader = new Scanner(loginFile);
+            while(reader.hasNextLine()) 
             {
-                username = dataArray[0];
-                break;
+                String data = reader.nextLine();
+                String[] dataArray = data.split(",");
+                reader.close();
+                if (lar.clientUsernameInput == dataArray[0])
+                {
+                    username = dataArray[0];
+                    break;
+                }
             }
+        } catch (IOException e)
+        {
+            System.out.println("An error has occured.");
         }
         return username;
     }
 
 
-    public String getPassword() throws FileNotFoundException
+    public String getPassword()
     {
         //read text file for password
-        Scanner reader = new Scanner(loginFile);
-        while(reader.hasNextLine()) 
+        try
         {
-            String data = reader.nextLine();
-            String[] dataArray = data.split(",");
-            reader.close();
-            if (lar.clientUsernameInput == dataArray[0])
+            Scanner reader = new Scanner(loginFile);
+            while(reader.hasNextLine()) 
             {
-                password = dataArray[1];
-                break;
-            }
+                String data = reader.nextLine();
+                String[] dataArray = data.split(",");
+                reader.close();
+                if (lar.clientUsernameInput == dataArray[0])
+                {
+                    password = dataArray[1];
+                    break;
+                }
+            }   
+        } catch (IOException e)
+        {
+            System.out.println("An error has occured.");
         }
-        return password;
+        return password; 
     }
 
 
-    public String getEmail() throws FileNotFoundException
+    public String getEmail()
     {
         //read text file for email
-        Scanner reader = new Scanner(loginFile);
-        while(reader.hasNextLine()) 
+        try
         {
-            String data = reader.nextLine();
-            String[] dataArray = data.split(",");
-            reader.close();
-            if (lar.clientUsernameInput == dataArray[0])
+            Scanner reader = new Scanner(loginFile);
+            while(reader.hasNextLine()) 
             {
-                email = dataArray[2];
-                break;
+                String data = reader.nextLine();
+                String[] dataArray = data.split(",");
+                reader.close();
+                if (lar.clientUsernameInput == dataArray[0])
+                {
+                    email = dataArray[2];
+                    break;
+                }
             }
+        } catch (IOException e)
+        {
+            System.out.println("An error has occured.");
         }
         return email;
     }
 
 
-    public String getGender() throws FileNotFoundException
+    public String getGender()
     {
         //read text file for gender
-        Scanner reader = new Scanner(loginFile);
-        while(reader.hasNextLine()) 
+        try
         {
-            String data = reader.nextLine();
-            String[] dataArray = data.split(",");
-            reader.close();
-            if (lar.clientUsernameInput == dataArray[0])
+            Scanner reader = new Scanner(loginFile);
+            while(reader.hasNextLine()) 
             {
-                gender = dataArray[3];
-                break;
+                String data = reader.nextLine();
+                String[] dataArray = data.split(",");
+                reader.close();
+                if (lar.clientUsernameInput == dataArray[0])
+                {
+                    gender = dataArray[3];
+                    break;
+                }
             }
+        } catch(IOException e)
+        {
+            System.out.println("An error has occured.");
         }
         return gender;
     }
 
 
-    public String getContactNumber() throws FileNotFoundException
+    public String getContactNumber()
     {
         //read text file for contact number
-        Scanner reader = new Scanner(loginFile);
-        while(reader.hasNextLine()) 
+        try
         {
-            String data = reader.nextLine();
-            String[] dataArray = data.split(",");
-            reader.close();
-            if (lar.clientUsernameInput == dataArray[0])
+            Scanner reader = new Scanner(loginFile);
+            while(reader.hasNextLine()) 
             {
-                contactNumber = dataArray[4];
-                break;
+                String data = reader.nextLine();
+                String[] dataArray = data.split(",");
+                reader.close();
+                if (lar.clientUsernameInput == dataArray[0])
+                {
+                    contactNumber = dataArray[4];
+                    break;
+                }
             }
+        }catch(IOException e)
+        {
+            System.out.println("An error has occured.");
         }
         return contactNumber;
     }
