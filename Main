@@ -61,62 +61,45 @@ public class Main
 
 
 
-    private String bookingUI() //Done!! No touchy
-    {
-        String bookingID = "0";
-        String username;
-        String date;
-        String time;
-        String paymentMethod;
-    
-        // Ask for the current user's username to filter data
-        int numBooking = 0; // check how many lines are there in the booking text file
-        File bookingFile = new File("booking.txt");
-        Scanner readerBooking = null;
-        Scanner adminInput = new Scanner(System.in);
+    private String bookingUI() {
+        String username; // Assume username is obtained from a session or entered by the user
+        System.out.println("Please enter your username:");
+        Scanner inputScanner = new Scanner(System.in);
+        username = inputScanner.nextLine(); // Read username
 
-        try 
-        {
-            readerBooking = new Scanner(bookingFile);
-            while (readerBooking.hasNextLine()) 
-            {
-                numBooking++;
-                readerBooking.nextLine(); // Read the line to advance the scanner
+        String bookingIDInput = "0"; //initialize the variable with a temporary value
+        System.out.println("Booking ID\tUsername\tDate\tTime\tPayment Method");
+        System.out.println("_____________________________________________________");
+
+        try {
+            String bookingDirectory = "booking.txt";
+            File bookingFile = new File(bookingDirectory);
+            Scanner bookingDataReader = new Scanner(bookingFile);
+
+            while (bookingDataReader.hasNextLine()) {
+                String bookingData = bookingDataReader.nextLine();
+                // Handle different delimiters in the data file
+                String[] dataArray = bookingData.contains("|") ? bookingData.split("\\|") : bookingData.split(",");
+                
+                if (dataArray[1].equals(username)) { // Filter by username
+                    System.out.println(dataArray[0] + "\t" + dataArray[1] + "\t" + dataArray[2] + "\t" + dataArray[3] + "\t" + dataArray[4]);
+                    if (bookingIDInput.equals("0")) {
+                        bookingIDInput = dataArray[0]; // Set to the first matching booking ID
+                    }
+                }
             }
+            bookingDataReader.close();
 
-            readerBooking.close(); // Close the reader first
-
-            readerBooking = new Scanner(bookingFile); // Reopen the file for reading
-            for (int i = 1; i <= numBooking; i++) 
-            {
-                String data = readerBooking.nextLine();
-                String[] dataArrayBooking = data.split("\\|");
-
-                bookingID = dataArrayBooking[0];
-                username = dataArrayBooking[1];
-                date = dataArrayBooking[2];
-                time = dataArrayBooking[3];
-                paymentMethod = dataArrayBooking[4];
-
-                System.out.println(i + ".\t\t" + bookingID + "\t" + username + "\t" + date + "\t" + time + "\t" + paymentMethod);
-            }
-
-            System.out.print("\n\nPlease input the Booking ID to choose the desired booking: ");
-            bookingID = adminInput.nextLine();
-        } catch (IOException e) 
-        {
-            System.out.println("An error has occurred (admin system UI)");
-            e.printStackTrace();
-        } finally 
-        {
-            if (readerBooking != null) 
-            {
-                readerBooking.close();
-            }
-            adminInput.close(); // Close adminInput scanner
+            System.out.println("Please enter the respective Booking ID:");
+            bookingIDInput = inputScanner.nextLine(); // Read selected booking ID
+            
+        } catch (IOException e) {
+            System.out.println("An error occurred during the booking file opening.");
+        } finally {
+            inputScanner.close(); // Ensure the scanner is closed after use
         }
 
-        return bookingID;
+        return bookingIDInput;
     }
 
 
