@@ -1,1 +1,4 @@
-(Booking id),(Name),(Date),(Time),(Payment Method),(Depature Location),(Destination)
+B0001|Chan|2024-05-10|10:00|QR Payment|akd|aodfujh
+B0002|Chong|2024-06-08|07:30|QR Payment|aofjb|aofjh
+B0003|Chea|2024-07-12|11:35|Online Banking|alfkh|aodfj
+B0004|Chan|2024-05-16|11:00|QR Payment|akdada|aodfujhadsa
