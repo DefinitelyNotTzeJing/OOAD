@@ -22,9 +22,6 @@ public class BookingManager
         Scanner bookingCreateInput = new Scanner(System.in);    
         System.out.println("\nEnter booking details");
     
-        // Increment and format booking ID
-        String bookingId = "B" + String.format("%04d", bookingIdCounter++);
-    
         String name = "";
         boolean validName = false;
         while (!validName)
@@ -103,7 +100,7 @@ public class BookingManager
         boolean validPaymentChoice = false;
         while (!validPaymentChoice) 
         {
-            System.out.println("Choose payment method:");
+            System.out.println("\nChoose payment method:");
             System.out.println("1. QR Payment");
             System.out.println("2. Online Banking");
             String paymentInput = bookingCreateInput.nextLine();
@@ -152,7 +149,16 @@ public class BookingManager
         // Write booking details to file
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("booking.txt", true))) 
         {
-            writer.write(bookingId + "," + name + "," + date + "," + time + "," + paymentMethod + "," + departureLocation + "," + destination);
+            // Increment and format booking ID
+            File bookingFile = new File("booking.txt");
+            Scanner bookingReader = new Scanner(bookingFile);
+            while (bookingReader.hasNextLine())
+            {
+                bookingIdCounter++;
+            }
+            bookingReader.close();
+            String bookingId = "B" + String.format("%04d", bookingIdCounter);
+            writer.write(bookingId + "|" + name + "|" + date + "|" + time + "|" + paymentMethod + "|" + departureLocation + "|" + destination + "\n");
             writer.newLine();
             System.out.println("Booking successful. Your booking ID is: " + bookingId);
         } catch (IOException e) 
@@ -165,14 +171,25 @@ public class BookingManager
     //view booking method
     public void bookingView(String bookingIDInput) 
     {
-        try (BufferedReader reader = new BufferedReader(new FileReader("booking.txt"))) 
+        String bookingDirectory = "booking.txt";
+        try (BufferedReader reader = new BufferedReader(new FileReader(bookingDirectory))) 
         {
             while (true) 
             {
-                System.out.println("\nEnter search term (Booking ID, Departure, Destination) or 'end' to exit:");
+                System.out.println("\nEnter search term: (1.Booking ID,2. Departure,3. Destination) or '4' to exit:");
+                System.out.println("1. Booking ID");
+                System.out.println("2. Depature");
+                System.out.println("3. Destination");
+                System.out.println("4. Quit");
                 String searchTerm = scanner.nextLine().trim();
+               
+                if (searchTerm.equalsIgnoreCase("Quit")) 
+                {
+                    System.out.println("Exiting search...");
+                    break;
+                }
 
-                if (searchTerm.equalsIgnoreCase("end")) 
+                if (searchTerm.equalsIgnoreCase("4")) 
                 {
                     System.out.println("Exiting search...");
                     break;
@@ -180,19 +197,19 @@ public class BookingManager
 
                 switch (searchTerm.toLowerCase()) 
                 {
-                    case "booking id":
+                    case "booking id","1":
                         System.out.print("Enter Booking ID: ");
                         String bookingId = scanner.nextLine().trim();
                         searchAndDisplayByBookingId(reader, bookingId);
                         break;
 
-                    case "departure":
+                    case "departure","2":
                         System.out.print("Enter Departure Location: ");
                         String departureLocation = scanner.nextLine().trim();
                         searchAndDisplayByDeparture(reader, departureLocation);
                         break;
 
-                    case "destination":
+                    case "destination","3":
                         System.out.print("Enter Destination: ");
                         String destination = scanner.nextLine().trim();
                         searchAndDisplayByDestination(reader, destination);
@@ -205,36 +222,38 @@ public class BookingManager
             }
         } catch (IOException e) 
         {
-            System.err.println("Error reading file: " + e.getMessage());
+           System.err.println("Error reading file: " + e.getMessage());
         }
     }
 
     private void searchAndDisplayByBookingId(BufferedReader reader, String bookingId) 
     {
         String line;
+        boolean found = false;
 
         System.out.println("\nSearching for Booking ID: " + bookingId);
         try 
         {
             while ((line = reader.readLine()) != null) 
             {
-                String[] bookingDetails = line.split(",");
+                String[]bookingDetails = line.split(",");
                 if (bookingDetails.length > 0 && bookingDetails[0].equalsIgnoreCase(bookingId)) 
                 {
                     displayBookingDetails(bookingDetails);
+                    found = true;
                     break;
                 }
             }
-
         }catch(IOException e) 
         {
-            System.out.println("No bookings found departing from: " + bookingId);
+      	    System.out.println("No bookings found departing from: " + bookingId);
         }
     }
 
     private void searchAndDisplayByDeparture(BufferedReader reader, String departureLocation)
     {
         String line;
+        boolean found = false;
         try 
         {
             System.out.println("\nSearching for Departure Location: " + departureLocation);
@@ -245,17 +264,19 @@ public class BookingManager
                 if (bookingDetails.length > 5 && bookingDetails[5].equalsIgnoreCase(departureLocation)) 
                 {
                     displayBookingDetails(bookingDetails);
+                    found = true;
                 }
             }
         }catch(IOException e) 
         {
-        	  System.out.println("No bookings found departing from: " + departureLocation);
+        	System.out.println("No bookings found departing from: " + departureLocation);
         }
     }
 
     private void searchAndDisplayByDestination(BufferedReader reader, String destination) 
     {
         String line;
+        boolean found = false;
         try 
         {
             System.out.println("\nSearching for Destination: " + destination);
@@ -266,6 +287,7 @@ public class BookingManager
                 if (bookingDetails.length > 6 && bookingDetails[6].equalsIgnoreCase(destination)) 
                 {
                     displayBookingDetails(bookingDetails);
+                    found = true;
                 }
             }     
         }catch(IOException e) 
