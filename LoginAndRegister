@@ -40,7 +40,7 @@ public class LoginAndRegister
         adminUsername = admin.getAdminName();
         adminPassword = admin.getAdminPassword();
 
-        if (adminUsernameInput == adminUsername && adminPasswordInput == adminPassword)
+        if (adminUsernameInput.equals(adminUsername) && adminPasswordInput.equals(adminPassword))
         {
             temp = 1;
         }
@@ -79,11 +79,6 @@ public class LoginAndRegister
                     clientEmail = dataArray[2];
                     clientContactNumber = dataArray[3];
                     clientGender = dataArray[4];
-                    System.out.println(clientUsername);
-                    System.out.println(clientPassword);
-                    System.out.println(clientEmail);
-                    System.out.println(clientContactNumber);
-                    System.out.println(clientGender);
                 }
             }
             reader.close();
@@ -100,7 +95,6 @@ public class LoginAndRegister
             System.out.println("An error has occured (client login)");
             e.getMessage();
         }
-        System.out.println("temp: " + temp); //delete this after testing (checking temp value purposed)
         return temp;
     }
 
