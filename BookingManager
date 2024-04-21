@@ -1,256 +1,362 @@
 import java.util.Scanner;
-import java.time.format.DateTimeFormatter;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.time.LocalDateTime;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.io.File;
+import java.io.FileReader;
 
-public class Main 
+
+public class BookingManager 
 {
-    Scanner inputLoginUI = new Scanner(System.in);
-    Scanner inputSystemUI = new Scanner(System.in);
-
-    public int loginUI()
-    {
-        // Display welcome message and options
-        int loginOption = 0;
-        do
-        {
-            System.out.println("\n\nWelcome to the e-Hailing Booking System!");
-            System.out.println("1. Register a new account");
-            System.out.println("2. Client login");
-            System.out.println("3. Administrator login");
-            System.out.print("\nChoose an option: ");
-            loginOption = inputLoginUI.nextInt();
-
-            if (loginOption != 1 && loginOption != 2 && loginOption != 3)
-            {
-                System.out.println("Invalid operation (loginUI)");
-            }
-        }while (loginOption != 1 && loginOption != 2 && loginOption != 3);
-        return loginOption;
-    }
-
-
-
-    private int systemUI(String username)
-    {
-        int systemOption = 0; //initialize systemOption with a value
-        
-        do 
-        {
-            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
-            LocalDateTime now = LocalDateTime.now();  
-            System.out.println("\n\nDear user\t\t\t\t\tCurrent Date and Time " + dtf.format(now)); //get username from login
-            System.out.println("Welcome to e-Hailing Booking System");
-            System.out.println("_____________________________________________________________________________________________");
-            System.out.println("Do you want to: ");
-            System.out.println("<1> Create/Request Booking(s)");
-            System.out.println("<2> View Booking(s)");
-            System.out.println("<3> Quit");
-            systemOption = inputSystemUI.nextInt();
-            inputSystemUI.nextLine();
-
-            if (systemOption != 1 && systemOption != 2 && systemOption != 3)
-            {
-                System.out.println("Invalid operation(system UI)");
-            }
-        } while (systemOption != 1 && systemOption != 2 && systemOption != 3);
-
-        return systemOption;
-    }
-
-
-
-    private String bookingUI() //Done!! No touchy
-    {
-        String bookingID = "0";
-        String username;
-        String date;
-        String time;
-        String paymentMethod;
+    Scanner scanner = new Scanner(System.in);
+    private static int bookingIdCounter = 1;
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+    private static final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("HH:mm");
     
-        // Ask for the current user's username to filter data
-        int numBooking = 0; // check how many lines are there in the booking text file
-        File bookingFile = new File("booking.txt");
-        Scanner readerBooking = null;
-        Scanner adminInput = new Scanner(System.in);
-
-        try 
+    //create booking method
+    public void bookingCreate()
+    {
+        Scanner bookingCreateInput = new Scanner(System.in);    
+        System.out.println("\nEnter booking details");
+    
+        String name = "";
+        boolean validName = false;
+        while (!validName)
         {
-            readerBooking = new Scanner(bookingFile);
-            while (readerBooking.hasNextLine()) 
+            System.out.print("Enter your name: ");
+            name = bookingCreateInput.nextLine();
+            if (!name.matches("[0-9]+"))
             {
-                numBooking++;
-                readerBooking.nextLine(); // Read the line to advance the scanner
-            }
-
-            readerBooking.close(); // Close the reader first
-
-            readerBooking = new Scanner(bookingFile); // Reopen the file for reading
-            for (int i = 1; i <= numBooking; i++) 
+                validName = true;
+            } else 
             {
-                String data = readerBooking.nextLine();
-                String[] dataArrayBooking = data.split("\\|");
-
-                bookingID = dataArrayBooking[0];
-                username = dataArrayBooking[1];
-                date = dataArrayBooking[2];
-                time = dataArrayBooking[3];
-                paymentMethod = dataArrayBooking[4];
-
-                System.out.println(i + ".\t\t" + bookingID + "\t" + username + "\t" + date + "\t" + time + "\t" + paymentMethod);
+                System.out.println("Wrong format. Name cannot contain numerical characters. Please re-enter.");
             }
-
-            System.out.print("\n\nPlease input the Booking ID to choose the desired booking: ");
-            bookingID = adminInput.nextLine();
-        } catch (IOException e) 
-        {
-            System.out.println("An error has occurred (admin system UI)");
-            e.printStackTrace();
-        } finally 
-        {
-            if (readerBooking != null) 
-            {
-                readerBooking.close();
-            }
-            adminInput.close(); // Close adminInput scanner
         }
-
-        return bookingID;
-    }
-
-
-
-    public String adminSystemUI()
-    {
-        String bookingID = "0";
-        String bookingName;
-        String bookingDate;
-        String bookingTime;
-
-        Scanner adminInput = new Scanner(System.in);
-        
-        System.out.println("Welcome to e-Hailing Booking System");
-        System.out.println("Dear Admin, which booking would you like to choose?");
-        System.out.println("____________________________________________________________________________________________________________");
-        //shows all booking ID with indexes at the front, let the admin choose the booking with its index no
     
-        System.out.println("Index No.\tBooking ID\tName\t\t\tDate\t\tTime\tPayment Method");
-        int numBooking = 0; // check how many lines are there in the booking text file
-        File bookingFile = new File("booking.txt");
+        String date = "";
+        boolean validDate = false;
+        while (!validDate) 
+        {
+            System.out.print("Enter date (yyyy-MM-dd): ");
+            date = bookingCreateInput.nextLine();
+            try 
+            {
+                DATE_FORMAT.parse(date);
+                validDate = true;
+            } catch (ParseException e) 
+            {
+                System.out.println("Wrong format. Please enter date in format yyyy-MM-dd");
+            }
+        }
+    
+        String time = "";
+        boolean validTime = false;
+        while (!validTime) 
+        {
+            System.out.print("Enter time (HH:mm): ");
+            time = bookingCreateInput.nextLine();
+            try 
+            {
+                TIME_FORMAT.parse(time);
+                validTime = true;
+            } catch (ParseException e) 
+            {
+                System.out.println("Wrong format. Please enter time in format HH:mm");
+            }
+        }
+    
+        File driverFile = new File("driver.txt");
         try
         {
-            Scanner readerBooking = new Scanner(bookingFile);
-            while (readerBooking.hasNextLine()) {
-                numBooking++;
-                readerBooking.nextLine(); // Move scanner to the next line
-            }
-            readerBooking.close();
+            Scanner driverFileReader = new Scanner(driverFile);
+            while (driverFileReader.hasNextLine())
+            {
+                String driverData = driverFileReader.nextLine();
+                String[] driverDataArray = driverData.split(",");
+                String driverName = driverDataArray[0];
+                String driverTotalRating = driverDataArray[1];
+                String driverRatingNum = driverDataArray[2];
 
-            // Reopen the scanner to read from the beginning of the file
-            readerBooking = new Scanner(bookingFile);
+                double aDriverTotalRating = Double.parseDouble(driverTotalRating); //convert string to double
+                int aDriverRatingNum = Integer.parseInt(driverRatingNum);
+                double avgRating = aDriverTotalRating/aDriverRatingNum;
 
-            for (int i = 1; i <= numBooking; i++) { // Start from 1 and use <= to include all lines
-                String data = readerBooking.nextLine();
-                String[] dataArrayBooking = data.split("\\|");
-        
-                bookingID = dataArrayBooking[0];
-                bookingName = dataArrayBooking[1];
-                bookingDate = dataArrayBooking[2];
-                bookingTime = dataArrayBooking[3];
-        
-                System.out.println(i + ".\t\t" + bookingID + "\t" + bookingName + "\t" + bookingDate + "\t" + bookingTime);
+                System.out.println("\nDriver Name: " + driverName);
+                System.out.println("Driver average rating: " + avgRating + "(" + aDriverRatingNum + ")");
             }
-            System.out.print("\n\nPlease input the Booking ID to choose the desired booking: ");
-            bookingID = adminInput.nextLine();
-            adminInput.close();
-        } catch(IOException e)
+            driverFileReader.close();
+
+            //input to choose driver
+        }catch (IOException e)
         {
-            System.out.println("An error has occured (admin system UI)");
-            e.getMessage();
+            System.out.println("An error occured");
         }
-        return bookingID;
+        
+        int paymentChoice = 0;
+        boolean validPaymentChoice = false;
+        while (!validPaymentChoice) 
+        {
+            System.out.println("\nChoose payment method:");
+            System.out.println("1. QR Payment");
+            System.out.println("2. Online Banking");
+            String paymentInput = bookingCreateInput.nextLine();
+            if (paymentInput.equals("1") || paymentInput.equals("2")) 
+            {
+                paymentChoice = Integer.parseInt(paymentInput);
+                validPaymentChoice = true;
+            } else 
+            {
+                System.out.println("Wrong format. Please enter 1 or 2 for payment method.");
+            }
+        }
+        String paymentMethod = (paymentChoice == 1) ? "QR Payment" : "Online Banking";
+    
+        String departureLocation = "";
+        boolean validDepartureLocation = false;
+        while (!validDepartureLocation) 
+        {
+            System.out.print("Enter departure location: ");
+            departureLocation = bookingCreateInput.nextLine();
+            if (!departureLocation.matches("[0-9]+")) 
+            {
+                validDepartureLocation = true;
+            } else 
+            {
+                System.out.println("Wrong format. Departure location cannot contain numerical characters. Please re-enter.");
+            }
+        }
+    
+        String destination = "";
+        boolean validDestination = false;
+        while (!validDestination) 
+        {
+            System.out.print("Enter destination: ");
+            destination = bookingCreateInput.nextLine();
+            if (!destination.matches("[0-9]+")) 
+            {
+                validDestination = true;
+            } else 
+            {
+                System.out.println("Wrong format. Destination cannot contain numerical characters. Please re-enter.");
+            }
+        }
+        bookingCreateInput.close();
+        
+        // Write booking details to file
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("booking.txt", true))) 
+        {
+            //Increment and format booking ID
+            File bookingFile = new File("booking.txt");
+            Scanner bookingReader = new Scanner(bookingFile);
+            while (bookingReader.hasNextLine())
+            {
+                bookingIdCounter++;
+                bookingReader.nextLine();
+            }
+            bookingReader.close();
+            String bookingId = "B" + String.format("%04d", bookingIdCounter);
+            writer.write(bookingId + "|" + name + "|" + date + "|" + time + "|" + paymentMethod + "|" + departureLocation + "|" + destination);
+            writer.newLine();
+            System.out.println("Booking successful. Your booking ID is: " + bookingId);
+        } catch (IOException e) 
+        {
+            System.out.println("Error writing to file: " + e.getMessage());
+        }
     }
 
 
-
-    public static void main(String[] args) 
-    {   
-        Main main = new Main();
-        BookingManager book = new BookingManager();
-        LoginAndRegister lar = new LoginAndRegister();
-        Client c = new Client();
-
-        int loginOption, systemOption;
-        String adminOption;
-        int loginValidateClient; //1 = true, 2 = false
-        int loginValidateAdmin;
-
-        String bookingIDInput;
-
-        String username = c.getUsername();
-
-        do
+    //view booking method
+    public void bookingView(String bookingIDInput) 
+    {
+        String bookingDirectory = "booking.txt";
+        try (BufferedReader reader = new BufferedReader(new FileReader(bookingDirectory))) 
         {
-            loginOption = main.loginUI();
-            try
+            while (true) 
             {
-                if (loginOption == 1) //client register
+                System.out.println("\nEnter search term: (1.Booking ID,2. Departure,3. Destination) or '4' to exit:");
+                System.out.println("1. Booking ID");
+                System.out.println("2. Depature");
+                System.out.println("3. Destination");
+                System.out.println("4. Quit");
+                String searchTerm = scanner.nextLine().trim();
+               
+                if (searchTerm.equalsIgnoreCase("Quit")) 
                 {
-                    lar.clientRegister(); 
+                    System.out.println("Exiting search...");
+                    break;
                 }
 
-                else if (loginOption == 2) //client login
+                if (searchTerm.equalsIgnoreCase("4")) 
                 {
-                    loginValidateClient = lar.clientLogin();
-                    if (loginValidateClient == 1)
-                    {
-                        systemOption = main.systemUI(username);
-                        if (systemOption == 1) //Create bookings
-                        {
-                            //create bookings and save the details in respective user text file (make a method in client class and save the booking details in text file)
-                            book.bookingCreate();
-                        }
-
-                        else if (systemOption  == 2) //View bookings
-                        {
-                            //view all bookings and a new interface for the user to update, cancel and search for certain booking 
-                            bookingIDInput = main.bookingUI();
-                            book.bookingView(bookingIDInput);
-                        }
-
-                        else if (systemOption == 3) //Quit program
-                        {
-                            System.out.println("\033[H\033[2J"); //clear screen
-                            System.out.println("Account logout successfully.");
-                        }
-                    }
-                    else
-                    {
-                        System.out.println("Incorrect username and password. Please try again.");
-                    }
+                    System.out.println("Exiting search...");
+                    break;
                 }
 
-                else if (loginOption == 3) //admin login
+                switch (searchTerm.toLowerCase()) 
                 {
-                    loginValidateAdmin = lar.adminLogin();
-                    if (loginValidateAdmin == 1) //admin login succeed
-                    {
-                        adminOption = main.adminSystemUI();
-                        book.bookingView(adminOption); //link to a method to show booking details
-                    }
-                    else if (loginValidateAdmin == 2) //admin login failed
-                    {
-                        System.out.println("Incorrect username and password. Please try again.");
-                        main.loginUI();
-                    }   
+                    case "booking id","1":
+                        System.out.print("Enter Booking ID: ");
+                        String bookingId = scanner.nextLine().trim();
+                        searchAndDisplayByBookingId(reader, bookingId);
+                        break;
+
+                    case "departure","2":
+                        System.out.print("Enter Departure Location: ");
+                        String departureLocation = scanner.nextLine().trim();
+                        searchAndDisplayByDeparture(reader, departureLocation);
+                        break;
+
+                    case "destination","3":
+                        System.out.print("Enter Destination: ");
+                        String destination = scanner.nextLine().trim();
+                        searchAndDisplayByDestination(reader, destination);
+                        break;
+
+                    default:
+                        System.out.println("Invalid search term. Please try again.");
+                        break;
                 }
-                    
-            } catch (Exception e)
-            {
-                System.out.println("\n\nAn error has occured. Please try again\n");
-                e.printStackTrace();
             }
-        } while (loginOption != 1 && loginOption != 2); 
+        } catch (IOException e) 
+        {
+           System.err.println("Error reading file: " + e.getMessage());
+        }
+    }
+
+    private void searchAndDisplayByBookingId(BufferedReader reader, String bookingId) 
+    {
+        String line;
+        boolean found = false;
+
+        System.out.println("\nSearching for Booking ID: " + bookingId);
+        try 
+        {
+            while ((line = reader.readLine()) != null) 
+            {
+                String[]bookingDetails = line.split(",");
+                if (bookingDetails.length > 0 && bookingDetails[0].equalsIgnoreCase(bookingId)) 
+                {
+                    displayBookingDetails(bookingDetails);
+                    found = true;
+                    break;
+                }
+            }
+        }catch(IOException e) 
+        {
+      	    System.out.println("No bookings found departing from: " + bookingId);
+        }
+    }
+
+    private void searchAndDisplayByDeparture(BufferedReader reader, String departureLocation)
+    {
+        String line;
+        boolean found = false;
+        try 
+        {
+            System.out.println("\nSearching for Departure Location: " + departureLocation);
+
+            while ((line = reader.readLine()) != null) 
+            {
+                String[] bookingDetails = line.split(",");
+                if (bookingDetails.length > 5 && bookingDetails[5].equalsIgnoreCase(departureLocation)) 
+                {
+                    displayBookingDetails(bookingDetails);
+                    found = true;
+                }
+            }
+        }catch(IOException e) 
+        {
+        	System.out.println("No bookings found departing from: " + departureLocation);
+        }
+    }
+
+    private void searchAndDisplayByDestination(BufferedReader reader, String destination) 
+    {
+        String line;
+        boolean found = false;
+        try 
+        {
+            System.out.println("\nSearching for Destination: " + destination);
+
+            while ((line = reader.readLine()) != null) 
+            {
+                String[] bookingDetails = line.split(",");
+                if (bookingDetails.length > 6 && bookingDetails[6].equalsIgnoreCase(destination)) 
+                {
+                    displayBookingDetails(bookingDetails);
+                    found = true;
+                }
+            }     
+        }catch(IOException e) 
+        {
+      	  System.out.println("No bookings found departing from: " + destination);
+        }
+    }
+
+    public void deleteBooking() 
+    {
+        System.out.print("Enter Booking ID to delete: ");
+        String bookingIdToDelete = scanner.nextLine().trim();
+        String bookingDirectory = "booking.txt";
+        try 
+        {
+            File inputFile = new File(bookingDirectory);
+            File tempFile = new File("temp.txt");
+
+            try (BufferedReader reader = new BufferedReader(new FileReader(inputFile));
+                 BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile))) 
+                {
+
+                    String line;
+                    boolean found = false;
+
+                    while ((line = reader.readLine()) != null) 
+                    {
+                        String[] bookingDetails = line.split("|");
+                        if (bookingDetails.length > 0 && bookingDetails[0].equalsIgnoreCase(bookingIdToDelete)) 
+                        {
+                            found = true;
+                       
+                        } 
+                        else 
+                        {
+                        writer.write(line + "\n");
+                        }
+                    }
+
+                    if (!found) 
+                    {
+                        System.out.println("No booking found for Booking ID: " + bookingIdToDelete);
+                    }
+                }
+
+            if (inputFile.delete() && tempFile.renameTo(inputFile)) 
+            {
+                System.out.println("Booking deleted successfully.");
+            }  
+            else 
+            {
+                System.out.println("Failed to delete booking.");
+            }
+        } catch (IOException e) 
+        {
+            System.err.println("Error deleting booking: " + e.getMessage());
+        }
+    }
+
+    private void displayBookingDetails(String[] bookingUI) 
+    {
+        System.out.println("Booking ID: " + bookingUI[0]);
+        System.out.println("Name: " + bookingUI[1]);
+        System.out.println("Date: " + bookingUI[2]);
+        System.out.println("Time: " + bookingUI[3]);
+        System.out.println("Payment Method: " + bookingUI[4]);
+        System.out.println("Departure Location: " + bookingUI[5]);
+        System.out.println("Destination: " + bookingUI[6]);
+        System.out.println();
     }
 }
