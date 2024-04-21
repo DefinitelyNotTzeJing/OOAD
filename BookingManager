@@ -149,17 +149,17 @@ public class BookingManager
         // Write booking details to file
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("booking.txt", true))) 
         {
-            // Increment and format booking ID
+            //Increment and format booking ID
             File bookingFile = new File("booking.txt");
             Scanner bookingReader = new Scanner(bookingFile);
             while (bookingReader.hasNextLine())
             {
                 bookingIdCounter++;
+                bookingReader.nextLine();
             }
             bookingReader.close();
-            
             String bookingId = "B" + String.format("%04d", bookingIdCounter);
-            writer.write(bookingId + "|" + name + "|" + date + "|" + time + "|" + paymentMethod + "|" + departureLocation + "|" + destination + "\n");
+            writer.write(bookingId + "|" + name + "|" + date + "|" + time + "|" + paymentMethod + "|" + departureLocation + "|" + destination);
             writer.newLine();
             System.out.println("Booking successful. Your booking ID is: " + bookingId);
         } catch (IOException e) 
