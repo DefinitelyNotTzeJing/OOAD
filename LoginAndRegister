@@ -25,8 +25,10 @@ public class LoginAndRegister
     Administrator admin = new Administrator();
 
     //admin login method
-    public boolean adminLogin()
+    public int adminLogin()
     {
+        int temp = 2;
+
         System.out.println("Admin login:");
 
         System.out.print("Please enter your username: ");
@@ -40,16 +42,17 @@ public class LoginAndRegister
 
         if (adminUsernameInput == adminUsername && adminPasswordInput == adminPassword)
         {
-            return true;
+            temp = 1;
         }
         else
         {
-            return false;
+            temp = 2;
         }
+        return temp;
     }
     
     //client login method
-    public boolean clientLogin()
+    public int clientLogin()
     {
         int temp = 0;
 
@@ -60,18 +63,15 @@ public class LoginAndRegister
         clientPasswordInput = loginInputScanner.nextLine();
 
         //read user textfile for existing username and password
-        String loginDirectory = (clientUsernameInput + ".txt");
+        String loginDirectory = (".\\users\\" + clientUsernameInput + ".txt");
         File loginFile = new File(loginDirectory);
         try
         {
             Scanner reader = new Scanner(loginFile);
-            reader.close();
-
             while(reader.hasNextLine()) 
             {
                 String data = reader.nextLine();
                 String[] dataArray = data.split(",");
-                reader.close();
                 if (clientUsernameInput == dataArray[0])
                 {
                     clientUsername = dataArray[0];
@@ -95,14 +95,8 @@ public class LoginAndRegister
             System.out.println("An error has occured");
             e.getMessage();
         }
-        if (temp == 1)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        System.out.println("temp: " + temp); //delete this after testing (checking temp value purposed)
+        return temp;
     }
 
     //register method
@@ -135,7 +129,7 @@ public class LoginAndRegister
         
         try
         {
-            String registerDirectory = (clientUsername + ".txt");
+            String registerDirectory = (".\\users\\" + clientUsername + ".txt");
             FileWriter accCreate = new FileWriter(registerDirectory);
             accCreate.write(clientUsername + "," + clientPassword + "," + clientEmail + "," + clientContactNumber + "," + clientGender + "\n");
             accCreate.close();
