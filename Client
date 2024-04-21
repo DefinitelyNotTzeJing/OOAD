@@ -28,7 +28,7 @@ public class Client
                 if (lar.clientUsernameInput.equals(dataArray[0]))
                 {
                     username = dataArray[0];
-                    System.out.println("Temporary client get username test: " + username);
+                    System.out.println("Temporary client get username test: " + username); //remove later
                     break;
                 }
             }
@@ -54,13 +54,13 @@ public class Client
                 if (lar.clientUsernameInput.equals(dataArray[0]))
                 {
                     password = dataArray[1];
-                    System.out.println("Temporary client get password test: " + password);
+                    System.out.println("Temporary client get password test: " + password); //remove later
                     break;
                 }
             }   
         } catch (IOException e)
         {
-            System.out.println("An error has occured. (client get password)");
+            System.out.println("An error has occured. (client get password)"); 
         }
         return password; 
     }
@@ -80,7 +80,7 @@ public class Client
                 if (lar.clientUsernameInput.equals(dataArray[0]))
                 {
                     email = dataArray[2];
-                    System.out.println("Temporary client get email test: " + email);
+                    System.out.println("Temporary client get email test: " + email); //remove later
                     break;
                 }
             }
@@ -106,7 +106,7 @@ public class Client
                 if (lar.clientUsernameInput.equals(dataArray[0]))
                 {
                     gender = dataArray[3];
-                    System.out.println("Temporary client get gender test: " + gender);
+                    System.out.println("Temporary client get gender test: " + gender); //remove later
                     break;
                 }
             }
@@ -132,7 +132,7 @@ public class Client
                 if (lar.clientUsernameInput.equals(dataArray[0]))
                 {
                     contactNumber = dataArray[4];
-                    System.out.println("Temporary client get contact number test: " + contactNumber);
+                    System.out.println("Temporary client get contact number test: " + contactNumber); //remove later
                     break;
                 }
             }
