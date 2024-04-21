@@ -12,7 +12,7 @@ public class Client
 
     //get username from textfile
     LoginAndRegister lar = new LoginAndRegister();
-    File loginFile = new File(".\\users" + lar.clientUsernameInput + ".txt");
+    File loginFile = new File(".\\users\\" + lar.clientUsernameInput + ".txt");
 
     public String getUsername()
     {
