@@ -69,7 +69,7 @@ public class Main
 
         String bookingIDInput = "0"; //initialize the variable with a temporary value
         System.out.println("Booking ID\tUsername\tDate\tTime\tPayment Method");
-        System.out.println("_____________________________________________________");
+        System.out.println("____________________________________________________________");
 
         try {
             String bookingDirectory = "booking.txt";
@@ -233,7 +233,7 @@ public class Main
                     
             } catch (Exception e)
             {
-                System.out.println("\n\nAn error has occured. Please try again\n");
+                System.out.println("\n\nAn error has occured. Please try again (main method)\n");
                 e.printStackTrace();
             }
         } while (loginOption != 1 && loginOption != 2); 
