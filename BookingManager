@@ -7,6 +7,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.io.File;
 import java.io.FileReader;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 
 public class BookingManager 
@@ -213,12 +216,12 @@ public class BookingManager
             if (bookingViewOption.equals("1")) // Update booking
             {
                 System.out.println("Update Booking");
-                //updateBooking(bookingIDInput);
+                updateBooking(bookingIDInput);
             }
             else if (bookingViewOption.equals("2")) // Delete booking
             {
                 System.out.println("Delete Booking");
-                //deleteBooking(bookingIDInput);
+                deleteBooking(bookingIDInput);
             }
             else // Quit program
             {
@@ -229,5 +232,142 @@ public class BookingManager
         {
             System.out.println("An error has occured (booking view)");
         }
+    }
+
+    //delete booking method
+    public void deleteBooking(String bookingID) 
+    {
+        String bookingIdToDelete = bookingID;
+        String bookingDirectory = "booking.txt";
+        try 
+        {
+            File inputFile = new File(bookingDirectory);
+            File tempFile = new File("temp.txt");
+
+            try (BufferedReader reader = new BufferedReader(new FileReader(inputFile));BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile))) 
+            {
+
+                String line;
+                boolean found = false;
+
+                while ((line = reader.readLine()) != null) 
+                {
+                    String[] bookingDetails = line.split("|");
+                    if (bookingDetails.length > 0 && bookingDetails[0].equalsIgnoreCase(bookingIdToDelete)) 
+                    {
+                        found = true;
+                    
+                    } else 
+                    {
+                        writer.write(line + "\n");
+                    }
+                }
+
+                if (!found) 
+                {
+                    System.out.println("No booking found for Booking ID: " + bookingIdToDelete);
+                }
+            }
+
+            if (inputFile.delete() && tempFile.renameTo(inputFile)) 
+            {
+                System.out.println("Booking deleted successfully.");
+            } 
+            else 
+            {
+                System.out.println("Failed to delete booking.");
+            }
+        } catch (IOException e) 
+        {
+            System.err.println("Error deleting booking: " + e.getMessage());
+        }
+    }
+
+    public void updateBooking(String bookingID) 
+    {
+        String bookingIdToUpdate = bookingID;
+        String bookingDirectory = "booking.txt";
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(bookingDirectory))) 
+        {
+            List<String[]> dataArray = new ArrayList<>();
+
+            // Read lines and populate dataArray with split values
+            String line;
+            while ((line = reader.readLine()) != null) 
+            {
+                String[] bookingDetails = line.split("\\|", -1); // Use "|" as delimiter
+                dataArray.add(bookingDetails);
+            }
+
+            System.out.println("DataArray contents before update:");
+            for (String[] booking : dataArray) 
+            {
+                System.out.println(Arrays.toString(booking));
+            }
+
+            boolean found = false;
+            for (int i = 0; i < dataArray.size(); i++) 
+            {
+                String[] bookingDetails = dataArray.get(i);
+                if (bookingDetails.length >= 1 && bookingDetails[0].equals(bookingIdToUpdate)) {
+                    System.out.println("Current Booking Details:");
+                    displayBookingDetails(bookingDetails);
+
+                    String updatedDetails = enterUpdatedBookingDetails(bookingDetails);
+                    String[] updatedBooking = updatedDetails.split("\\|", -1); // Update booking details
+
+                    // Ensure the updated booking retains the original bookingId
+                    updatedBooking[0] = bookingIdToUpdate;
+
+                    // Update dataArray with the modified booking details
+                    dataArray.set(i, updatedBooking);
+
+                    System.out.println("Booking details updated successfully.");
+                    found = true;
+                    break; // Exit the loop once booking is updated
+                }
+            }
+
+            if (!found) {
+                System.out.println("Booking not found for ID: " + bookingIdToUpdate);
+            }
+
+            // Write the updated dataArray back to the file
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(bookingDirectory))) {
+                for (String[] booking : dataArray) {
+                    StringBuilder lineBuilder = new StringBuilder();
+                    for (int j = 0; j < booking.length; j++) {
+                        lineBuilder.append(booking[j]);
+                        if (j < booking.length - 1) {
+                            lineBuilder.append("|");
+                        }
+                    }
+                    writer.write(lineBuilder.toString());
+                    writer.newLine();
+                }
+            } catch (IOException e) {
+                System.err.println("Error writing updated booking data to file: " + e.getMessage());
+            }
+        } catch (IOException e) {
+            System.err.println("Error updating booking: " + e.getMessage());
+        }
+    }
+    private String enterUpdatedBookingDetails(String[] currentBookingDetails) { 
+    	 
+    	 System.out.println("Enter new details (name|date|time|payment|departure|destination):");
+          return  scanner.nextLine().trim();
+    }
+
+    private void displayBookingDetails(String[] bookingDetails) 
+    {
+        System.out.println("Booking ID: " + bookingDetails[0]);
+        System.out.println("Name: " + bookingDetails[1]);
+        System.out.println("Date: " + bookingDetails[2]);
+        System.out.println("Time: " + bookingDetails[3]);
+        System.out.println("Payment Method: " + bookingDetails[4]);
+        System.out.println("Departure Location: " + bookingDetails[5]);
+        System.out.println("Destination: " + bookingDetails[6]);
+        System.out.println();
     }
 }
