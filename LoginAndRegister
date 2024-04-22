@@ -81,7 +81,7 @@ public class LoginAndRegister
                     clientGender = dataArray[4];
                 }
             }
-            reader.close();
+            //reader.close();
             if (clientUsernameInput.equals(clientUsername) && clientPasswordInput.equals(clientPassword))
             {
                 temp = 1; //true
