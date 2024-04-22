@@ -171,7 +171,6 @@ public class BookingManager
         }
     }
 
-
     //view booking method
     public void bookingView(String bookingIDInput) 
     {
@@ -252,7 +251,7 @@ public class BookingManager
 
                 while ((line = reader.readLine()) != null) 
                 {
-                    String[] bookingDetails = line.split("|");
+                    String[] bookingDetails = line.split("\\|");
                     if (bookingDetails.length > 0 && bookingDetails[0].equalsIgnoreCase(bookingIdToDelete)) 
                     {
                         found = true;
@@ -283,33 +282,29 @@ public class BookingManager
         }
     }
 
-    // update booking method
-    public void updateBooking(String bookingID) 
-    {
-        String bookingIdToUpdate = bookingID;
+    //update booking method
+    public void updateBooking(String bookingIdToUpdate) {
         String bookingDirectory = "booking.txt";
+        System.out.println("Enter booking ID to update:");
+        bookingIdToUpdate =scanner.nextLine().trim();
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(bookingDirectory))) 
-        {
+        try (BufferedReader reader = new BufferedReader(new FileReader(bookingDirectory))) {
             List<String[]> dataArray = new ArrayList<>();
 
             // Read lines and populate dataArray with split values
             String line;
-            while ((line = reader.readLine()) != null) 
-            {
+            while ((line = reader.readLine()) != null) {
                 String[] bookingDetails = line.split("\\|", -1); // Use "|" as delimiter
                 dataArray.add(bookingDetails);
             }
 
             System.out.println("DataArray contents before update:");
-            for (String[] booking : dataArray) 
-            {
+            for (String[] booking : dataArray) {
                 System.out.println(Arrays.toString(booking));
             }
 
             boolean found = false;
-            for (int i = 0; i < dataArray.size(); i++) 
-            {
+            for (int i = 0; i < dataArray.size(); i++) {
                 String[] bookingDetails = dataArray.get(i);
                 if (bookingDetails.length >= 1 && bookingDetails[0].equals(bookingIdToUpdate)) {
                     System.out.println("Current Booking Details:");
@@ -318,12 +313,12 @@ public class BookingManager
                     String updatedDetails = enterUpdatedBookingDetails(bookingDetails);
                     String[] updatedBooking = updatedDetails.split("\\|", -1); // Update booking details
 
-                    // Ensure the updated booking retains the original bookingId
+                    // Ensure the updated booking retains the original bookingId and name
                     updatedBooking[0] = bookingIdToUpdate;
+                    updatedBooking[1] = bookingDetails[1]; // Keep the original name
 
                     // Update dataArray with the modified booking details
                     dataArray.set(i, updatedBooking);
-
                     System.out.println("Booking details updated successfully.");
                     found = true;
                     break; // Exit the loop once booking is updated
@@ -347,6 +342,7 @@ public class BookingManager
                     writer.write(lineBuilder.toString());
                     writer.newLine();
                 }
+                System.out.println("Data written back to file successfully.");
             } catch (IOException e) {
                 System.err.println("Error writing updated booking data to file: " + e.getMessage());
             }
@@ -354,15 +350,35 @@ public class BookingManager
             System.err.println("Error updating booking: " + e.getMessage());
         }
     }
-    
-    private String enterUpdatedBookingDetails(String[] currentBookingDetails) { 
-    	 
-    	 System.out.println("Enter new details (name|date|time|payment|departure|destination):");
-          return  scanner.nextLine().trim();
+
+    private String enterUpdatedBookingDetails(String[] currentBookingDetails) {
+        System.out.println("Enter new details (date|time|payment|departure|destination):");
+
+        // Display current details except for the booking ID and name
+        System.out.println("Current Name: " + currentBookingDetails[1]);
+        System.out.println("Current Date: " + currentBookingDetails[2]);
+        System.out.println("Current Time: " + currentBookingDetails[3]);
+        System.out.println("Current Payment Method: " + currentBookingDetails[4]);
+        System.out.println("Current Departure Location: " + currentBookingDetails[5]);
+        System.out.println("Current Destination: " + currentBookingDetails[6]);
+
+        // Prompt for new details and return as a formatted string
+        System.out.print("New Date: ");
+        String newDate = scanner.nextLine().trim();
+        System.out.print("New Time: ");
+        String newTime = scanner.nextLine().trim();
+        System.out.print("New Payment Method: ");
+        String newPaymentMethod = scanner.nextLine().trim();
+        System.out.print("New Departure Location: ");
+        String newDeparture = scanner.nextLine().trim();
+        System.out.print("New Destination: ");
+        String newDestination = scanner.nextLine().trim();
+
+        // Construct the updated details string
+        return currentBookingDetails[0] + "|" +currentBookingDetails[1]+"|"+ newDate + "|" + newTime + "|" + newPaymentMethod + "|" + newDeparture + "|" + newDestination;
     }
 
-    private void displayBookingDetails(String[] bookingDetails) 
-    {
+    private void displayBookingDetails(String[] bookingDetails) {
         System.out.println("Booking ID: " + bookingDetails[0]);
         System.out.println("Name: " + bookingDetails[1]);
         System.out.println("Date: " + bookingDetails[2]);
