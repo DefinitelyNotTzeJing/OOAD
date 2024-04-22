@@ -104,21 +104,22 @@ public class Main
 
 
 
-    public String adminSystemUI()
+    public void adminSystemUI()
     {
         String bookingID = "0";
         String bookingName;
         String bookingDate;
         String bookingTime;
-
-        Scanner adminInput = new Scanner(System.in);
+        String bookingPaymentMethod;
+        String bookingDepartureLocation;
+        String bookingDestination;
         
-        System.out.println("Welcome to e-Hailing Booking System");
-        System.out.println("Dear Admin, which booking would you like to choose?");
-        System.out.println("____________________________________________________________________________________________________________");
+        System.out.print("\033[H\033[2J"); 
+        System.out.println("Dear Admin, Welcome back to e-Hailing Booking System");
+        System.out.println("______________________________________________________________________________________________________________________________________");
         //shows all booking ID with indexes at the front, let the admin choose the booking with its index no
     
-        System.out.println("Index No.\tBooking ID\tName\tDate\t\tTime");
+        System.out.println("Index No.\tBooking ID\tName\tDate\t\tTime\tPayment Method\t\tDeparture Location\t\tDestination");
         int numBooking = 0; // check how many lines are there in the booking text file
         File bookingFile = new File("booking.txt");
         try
@@ -142,19 +143,18 @@ public class Main
                 bookingName = dataArrayBooking[1];
                 bookingDate = dataArrayBooking[2];
                 bookingTime = dataArrayBooking[3];
+                bookingPaymentMethod = dataArrayBooking[4];
+                bookingDepartureLocation = dataArrayBooking[5];
+                bookingDestination = dataArrayBooking[6];
         
-                System.out.println(i + ".\t\t" + bookingID + "\t\t" + bookingName + "\t" + bookingDate + "\t" + bookingTime);
+                System.out.println(i + ".\t\t" + bookingID + "\t\t" + bookingName + "\t" + bookingDate + "\t" + bookingTime + "\t" + bookingPaymentMethod + "\t\t" + bookingDepartureLocation + "\t\t\t" + bookingDestination);
             }
             readerBooking.close();
-            System.out.print("\n\nPlease input the Booking ID to choose the desired booking: ");
-            bookingID = adminInput.nextLine();
-            adminInput.close();
         } catch(IOException e)
         {
             System.out.println("An error has occured (admin system UI)");
             e.getMessage();
         }
-        return bookingID;
     }
 
 
@@ -167,7 +167,6 @@ public class Main
         Client c = new Client();
 
         int loginOption, systemOption;
-        String adminOption;
         int loginValidateClient; //1 = true, 2 = false
         int loginValidateAdmin;
 
@@ -221,8 +220,7 @@ public class Main
                     loginValidateAdmin = lar.adminLogin();
                     if (loginValidateAdmin == 1) //admin login succeed
                     {
-                        adminOption = main.adminSystemUI();
-                        book.bookingView(adminOption); //link to a method to show booking details
+                        main.adminSystemUI();
                     }
                     else if (loginValidateAdmin == 2) //admin login failed
                     {
