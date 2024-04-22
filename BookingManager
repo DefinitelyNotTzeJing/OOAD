@@ -200,6 +200,7 @@ public class BookingManager
             }
 
             String bookingViewOption;
+            Scanner bookingViewInput = new Scanner(System.in);
             do
             {
                 System.out.println("\n\nDo you want to: ");
@@ -207,11 +208,10 @@ public class BookingManager
                 System.out.println("<2> Delete booking");
                 System.out.println("<3> Quit");
                 System.out.print("---> ");
-                Scanner bookingViewInput = new Scanner(System.in);
+                //Scanner bookingViewInput = new Scanner(System.in);
                 bookingViewOption = bookingViewInput.nextLine();
-                System.out.println(bookingViewOption);
-                bookingViewInput.close();
-            }while (!bookingViewOption.equals("1") || !bookingViewOption.equals("2") || !bookingViewOption.equals("3"));
+                //bookingViewInput.close();
+            }while (!bookingViewOption.equals("1") && !bookingViewOption.equals("2") && !bookingViewOption.equals("3"));
 
             if (bookingViewOption.equals("1")) // Update booking
             {
@@ -283,6 +283,7 @@ public class BookingManager
         }
     }
 
+    // update booking method
     public void updateBooking(String bookingID) 
     {
         String bookingIdToUpdate = bookingID;
@@ -353,6 +354,7 @@ public class BookingManager
             System.err.println("Error updating booking: " + e.getMessage());
         }
     }
+    
     private String enterUpdatedBookingDetails(String[] currentBookingDetails) { 
     	 
     	 System.out.println("Enter new details (name|date|time|payment|departure|destination):");
