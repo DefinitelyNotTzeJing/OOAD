@@ -68,8 +68,8 @@ public class Main
         username = inputScanner.nextLine(); // Read username
 
         String bookingIDInput = "0"; //initialize the variable with a temporary value
-        System.out.println("Booking ID\tUsername\tDate\tTime\tPayment Method");
-        System.out.println("____________________________________________________________");
+        System.out.println("Booking ID\tUsername\tDate\t\tTime\tPayment Method");
+        System.out.println("__________________________________________________________________________________");
 
         try {
             String bookingDirectory = "booking.txt";
@@ -82,7 +82,7 @@ public class Main
                 String[] dataArray = bookingData.contains("|") ? bookingData.split("\\|") : bookingData.split(",");
                 
                 if (dataArray[1].equals(username)) { // Filter by username
-                    System.out.println(dataArray[0] + "\t" + dataArray[1] + "\t" + dataArray[2] + "\t" + dataArray[3] + "\t" + dataArray[4]);
+                    System.out.println(dataArray[0] + "\t\t" + dataArray[1] + "\t\t" + dataArray[2] + "\t" + dataArray[3] + "\t" + dataArray[4]);
                     if (bookingIDInput.equals("0")) {
                         bookingIDInput = dataArray[0]; // Set to the first matching booking ID
                     }
